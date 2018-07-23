@@ -1,0 +1,39 @@
+<resources>
+    <string name="btn_startReading">REKAM</string>
+    <string name="btn_login">LOGIN</string>
+
+    <string name="lbl_diagnose">DIAGNOSA</string>
+    <string name="lbl_username">username</string>
+    <string name="lbl_password">password</string>
+    <string name="lbl_daftar">Daftar</string>
+    <string name="lbl_nama">Nama</string>
+    <string name="lbl_nip">NIP</string>
+    <string name="lbl_sandi">Sandi Masuk</string>
+    <string name="lbl_ulangSandi">Ulang Kata Sandi</string>
+    <string name="btn_simpan">SIMPAN</string>
+    <string name="btn_detect">DETEKSI</string>
+
+    <string name="static_ioServer">http://chat.socket.io</string>
+    <string name="title_activity_menu">menu</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="btn_test">ECG Test</string>
+    <string name="btn_medrec">Rekam Medis</string>
+    <string name="btn_info">Informasi</string>
+    <string name="btn_exit">Keluar</string>
+    <string name="lbl_usia">Usia</string>
+    <string name="db_lbl_tanggal">Tanggal</string>
+    <string name="db_lbl_hasil">Hasil</string>
+    <string name="lbl_interval">Interval</string>
+    <string name="lbl_tgl_masuk">Tanggal Masuk</string>
+    <string name="btn_change_data">Data Pasien</string>
+    <string name="app_name">Mobile Ecg</string>
+    <string name="lbl_User">Username</string>
+</resources>

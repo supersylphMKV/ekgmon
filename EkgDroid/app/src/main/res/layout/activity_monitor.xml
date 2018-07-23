@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Monitor">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:background="@android:color/darker_gray"
+        android:elevation="0dp"
+        android:minHeight="0dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/body_frame"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="40dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <FrameLayout
+            android:id="@+id/window_ekg"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#6f88a3"
+            app:layout_constraintBottom_toTopOf="@+id/lbl_diagnosa"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/lbl_diagnosa"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="148dp"
+            android:text="@string/lbl_diagnose"
+            android:textAlignment="viewStart"
+            app:layout_constraintBottom_toTopOf="@+id/btn_deteksi"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/window_ekg" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/space4"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/color_pithcBlack"
+            app:layout_constraintBottom_toTopOf="@+id/btn_deteksi"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lbl_diagnosa">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="2dp"
+                android:background="@color/color_clearWhite"
+                android:text="@string/lbl_interval"
+                android:textColor="@color/color_pithcBlack"
+                app:layout_constraintBottom_toTopOf="@+id/lbl_gen_result"
+                app:layout_constraintEnd_toStartOf="@+id/lbl_form_data"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/lbl_form_data"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="2dp"
+                android:background="@color/color_clearWhite"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/lbl_gen_result"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/lbl_card_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_tabHeader"
+                    android:text="@string/lbl_nama"
+                    android:textColor="@color/color_pithcBlack" />
+
+                <TextView
+                    android:id="@+id/input_card_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp" />
+
+                <TextView
+                    android:id="@+id/lbl_card_age"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_tabHeader"
+                    android:text="@string/lbl_usia"
+                    android:textColor="@color/color_pithcBlack" />
+
+                <TextView
+                    android:id="@+id/input_card_age"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp" />
+
+                <TextView
+                    android:id="@+id/lbl_card_tglMasuk"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_tabHeader"
+                    android:text="@string/lbl_tgl_masuk"
+                    android:textColor="@color/color_pithcBlack" />
+
+                <TextView
+                    android:id="@+id/input_card_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="date" />
+
+                <TextView
+                    android:id="@+id/btn_card_changeData"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_tabHeader"
+                    android:text="@string/btn_change_data"
+                    android:textAlignment="center"
+                    android:textColor="@color/color_pithcBlack" />
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/lbl_gen_result"
+                android:layout_width="100dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginStart="2dp"
+                android:background="@color/color_clearWhite"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/lbl_form_data"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4">
+
+            </FrameLayout>
+        </android.support.constraint.ConstraintLayout>
+
+        <Button
+            android:id="@+id/btn_deteksi"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_detect"
+            app:layout_constraintBottom_toTopOf="@+id/btn_record"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lbl_diagnosa" />
+
+        <Button
+            android:id="@+id/btn_record"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_startReading"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_deteksi" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/db_frame"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#eeeeee"
+            android:orientation="vertical">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/db_lbl_nama"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="@color/color_tabHeader"
+                    android:paddingEnd="128dp"
+                    android:paddingStart="8dp"
+                    android:text="@string/lbl_nama"
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:id="@+id/db_lbl_usia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_tabHeader"
+                    android:paddingEnd="8dp"
+                    android:paddingStart="16dp"
+                    android:text="@string/lbl_usia"
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:id="@+id/db_lbl_tanggal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_tabHeader"
+                    android:paddingEnd="8dp"
+                    android:paddingStart="16dp"
+                    android:text="@string/db_lbl_tanggal"
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:id="@+id/db_lbl_hasil"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/color_tabHeader"
+                    android:paddingEnd="8dp"
+                    android:paddingStart="16dp"
+                    android:text="@string/db_lbl_hasil"
+                    android:textColor="#000000" />
+            </TableRow>
+
+        </TableLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/info_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/menu_frame"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25"
+            android:background="@color/color_skygrey"
+            android:orientation="vertical">
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2" />
+
+            <Button
+                android:id="@+id/btn_test"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text="@string/btn_test" />
+
+            <Button
+                android:id="@+id/btn_db"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text="@string/btn_medrec" />
+
+            <Button
+                android:id="@+id/btn_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text="@string/btn_info" />
+
+            <Button
+                android:id="@+id/btn_exit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text="@string/btn_exit" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/menu_spacer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.75"
+            android:background="@color/color_trans_black" />
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_tabHeader">#bac1ca</color>
+    <color name="color_pithcBlack">#000000</color>
+    <color name="color_clearWhite">#ffffff</color>
+    <color name="color_clear">#00ffffff</color>
+    <color name="color_skygrey">#cce0e6</color>
+    <color name="color_trans_black">#80000000</color>
+    <color name="color_hot_red">#ff0000</color>
+</resources>
