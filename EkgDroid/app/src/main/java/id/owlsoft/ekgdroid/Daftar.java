@@ -52,7 +52,7 @@ public class Daftar extends Activity {
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                SetInfoText("");
                 if(input_password.getText().toString().equals(input_passCheck.getText().toString())){
                     //Log.i("password",input_password.getText().toString()+", "+ input_passCheck.getText().toString());
                     OnRegister();
