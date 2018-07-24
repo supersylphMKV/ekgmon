@@ -34,7 +34,7 @@ class SocketConn {
     public static Socket mSocket;
     {
         try {
-            mSocket = IO.socket("http://192.168.43.43:1116");
+            mSocket = IO.socket("http://192.168.57.1:1116");
         } catch (URISyntaxException e) {
             Log.e("error", e.toString());
         }
