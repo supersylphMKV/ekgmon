@@ -36,4 +36,9 @@
     <string name="btn_change_data">Data Pasien</string>
     <string name="app_name">Mobile Ecg</string>
     <string name="lbl_User">Username</string>
+    <string name="lbl_mail">E-Mail</string>
+    <string name="btn_setting">SETTING</string>
+    <string name="lbl_dokter">Dokter Jaga</string>
+    <string name="btn_tambah">Tambah Data</string>
+    <string name="btn_batal">Batal</string>
 </resources>

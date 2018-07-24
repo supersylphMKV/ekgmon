@@ -53,11 +53,10 @@
             android:id="@+id/lbl_diagnosa"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="148dp"
             android:text="@string/lbl_diagnose"
             android:textAlignment="viewStart"
-            app:layout_constraintBottom_toTopOf="@+id/btn_deteksi"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/window_card"
+            app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/window_ekg" />
 
@@ -65,9 +64,10 @@
             android:id="@+id/window_card"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
             android:background="@color/color_pithcBlack"
-            app:layout_constraintBottom_toTopOf="@+id/btn_deteksi"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/lbl_diagnosa">
 
@@ -173,39 +173,56 @@
             </FrameLayout>
         </android.support.constraint.ConstraintLayout>
 
-        <Button
-            android:id="@+id/btn_deteksi"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_detect"
-            android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@+id/btn_record"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/window_card" />
-
-        <Button
-            android:id="@+id/btn_record"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_startReading"
-            app:layout_constraintBottom_toTopOf="@+id/btn_setting"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_deteksi" />
-
-        <Button
-            android:id="@+id/btn_setting"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_setting"
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="200dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_record"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/window_ekg"
+            app:layout_constraintTop_toBottomOf="@+id/window_ekg"
+            app:layout_constraintVertical_bias="0.0">
+
+            <Button
+                android:id="@+id/btn_deteksi"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/btn_detect"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@+id/btn_record"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/window_card" />
+
+            <Button
+                android:id="@+id/btn_record"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/btn_startReading"
+                app:layout_constraintBottom_toTopOf="@+id/btn_setting"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_deteksi" />
+
+            <Button
+                android:id="@+id/btn_setting"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/btn_setting"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_record"
+                app:layout_constraintVertical_bias="1.0" />
+        </LinearLayout>
 
     </android.support.constraint.ConstraintLayout>
 
@@ -368,11 +385,9 @@
         android:layout_marginTop="40dp"
         android:layout_weight="0.25"
         android:background="@color/color_clearWhite"
-        android:visibility="visible"
         app:layout_constraintTop_toTopOf="parent">
 
         <TableRow
-            android:id="@+id/pasien_header"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/color_clearWhite">
@@ -409,27 +424,6 @@
                 android:paddingStart="8dp"
                 android:text="@string/lbl_dokter"
                 android:textColor="@color/color_pithcBlack" />
-
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/pasien_control"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <Button
-                android:id="@+id/btn_add_plist"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/btn_tambah" />
-
-            <Button
-                android:id="@+id/btn_cancel_plist"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/btn_batal" />
         </TableRow>
 
     </TableLayout>
