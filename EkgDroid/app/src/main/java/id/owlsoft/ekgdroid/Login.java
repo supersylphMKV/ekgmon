@@ -29,6 +29,7 @@ public class Login extends Activity {
     EditText inputPassword;
 
     SocketConn io = SocketConn.getInstance();
+    AppState state = AppState.getInstance();
 
     Intent main;
 
@@ -88,7 +89,7 @@ public class Login extends Activity {
                     @Override
                     public void call(Object... args) {
                         if((boolean)args[args.length-1]){
-                            main.putExtra("logged", true);
+                            state.isLogged = true;
                             startActivity(main);
                         } else {
                             SetLoginInfo("Data tidak ditemukan !");
