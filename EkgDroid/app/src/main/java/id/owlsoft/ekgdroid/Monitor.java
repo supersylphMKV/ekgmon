@@ -27,8 +27,12 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Space;
+import android.widget.Spinner;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +41,8 @@ import com.felhr.usbserial.UsbSerialInterface;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
@@ -49,12 +55,15 @@ public class Monitor extends AppCompatActivity {
 
     Boolean logged = false;
 
-    Button btn_ecg, btn_medrec, btn_info, btn_exit,btn_detect,btn_record,btn_setting,btn_pList_tambah,btn_pList_batal;
-    LinearLayout frame_medrec, frame_info, frame_menu, form_pData;
+    Button btn_ecg, btn_medrec, btn_info, btn_exit,btn_detect,btn_record,btn_setting,btn_pList_tambah,btn_pList_batal,btn_pSubmit;
+    LinearLayout frame_medrec, frame_info, frame_menu, form_pData, frame_pReg;
     ConstraintLayout frame_ecg;
     FrameLayout frame_menu_spacer, ecg_window;
     TableLayout frame_pasien;
     TextView lbl_device_info,btn_card_changeData;
+    TextView lbl_pFullName, lbl_pBirthPlace, lbl_pBirthDate, lbl_pIdNumb;
+    Spinner lbl_pIdType, lbl_pTittleName, lbl_pBloodType;
+    RadioGroup  lbl_pGender;
 
     GraphDrawer graph;
 
@@ -66,6 +75,8 @@ public class Monitor extends AppCompatActivity {
     UsbManager usbManager;
     UsbDeviceConnection usbConn;
     UsbSerialDevice serial;
+
+    SocketConn socket = SocketConn.getInstance();
 
     AppState state = AppState.getInstance();
 
@@ -120,6 +131,14 @@ public class Monitor extends AppCompatActivity {
         graph = new GraphDrawer(this);
 
         lbl_device_info = findViewById(R.id.lbl_device_info);
+        lbl_pBirthDate = findViewById(R.id.input_reg_pasien_bdate);
+        lbl_pBirthPlace = findViewById(R.id.input_reg_pasien_bplace);
+        lbl_pFullName = findViewById(R.id.input_reg_pasien_name);
+        lbl_pTittleName = findViewById(R.id.input_reg_pasien_tname);
+        lbl_pGender = findViewById(R.id.check_gender_group);
+        lbl_pIdType = findViewById(R.id.input_reg_pasien_idtype);
+        lbl_pIdNumb = findViewById(R.id.input_reg_pasien_idnumb);
+        lbl_pBloodType = findViewById(R.id.input_reg_pasien_bloodtype);
 
         btn_ecg = (Button) findViewById(R.id.btn_test);
         btn_medrec = (Button)findViewById(R.id.btn_db);
@@ -131,6 +150,7 @@ public class Monitor extends AppCompatActivity {
         btn_card_changeData = findViewById(R.id.btn_card_changeData);
         btn_pList_batal = findViewById(R.id.btn_cancel_plist);
         btn_pList_tambah = findViewById(R.id.btn_add_plist);
+        btn_pSubmit = findViewById(R.id.btn_reg_psubmit);
 
         frame_ecg = (ConstraintLayout)findViewById(R.id.body_frame);
         frame_menu = (LinearLayout)findViewById(R.id.menu_frame);
@@ -139,6 +159,7 @@ public class Monitor extends AppCompatActivity {
         form_pData = findViewById(R.id.lbl_form_data);
         frame_menu_spacer = (FrameLayout) findViewById(R.id.menu_spacer);
         frame_pasien = findViewById(R.id.pasien_frame);
+        frame_pReg = findViewById(R.id.pasienreg_frame);
 
         ecg_window = findViewById(R.id.window_ekg);
         ecg_window.addView(graph);
@@ -150,6 +171,7 @@ public class Monitor extends AppCompatActivity {
         frames.put("frame_medrec", frame_medrec);
         frames.put("frame_info", frame_info);
         frames.put("frame_pasien", frame_pasien);
+        frames.put("frame_pReg", frame_pReg);
 
         vto = ecg_window.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -199,6 +221,12 @@ public class Monitor extends AppCompatActivity {
                 setTab(1);
             }
         });
+        btn_pList_tambah.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setTab(5);
+            }
+        });
         btn_exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -219,6 +247,12 @@ public class Monitor extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+            }
+        });
+        btn_pSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                OnAddPasien();
             }
         });
         frame_menu_spacer.setOnClickListener(new View.OnClickListener() {
@@ -269,6 +303,9 @@ public class Monitor extends AppCompatActivity {
                 break;
             case 4:
                 OnPasien();
+                break;
+            case 5:
+                OnPRegister();
                 break;
             default:
                 OnECG();
@@ -327,6 +364,19 @@ public class Monitor extends AppCompatActivity {
     }
 
     void  OnPasien(){
+
+        socket.GetList("p", null, new EventListener() {
+            @Override
+            public void call(Object result) {
+                if(result instanceof JSONArray){
+                    JSONArray resObj = (JSONArray)result;
+                    if(resObj.length() > 0){
+
+                    }
+                }
+            }
+        });
+
         for(View v:frames.values()){
             v.setVisibility(View.GONE);
         }
@@ -336,11 +386,47 @@ public class Monitor extends AppCompatActivity {
         state.tab = 4;
     }
 
+    void OnPRegister(){
+        for(View v:frames.values()){
+            v.setVisibility(View.GONE);
+        }
+        frame_menu.setVisibility(View.GONE);
+        frame_menu_spacer.setVisibility(View.GONE);
+        frame_pReg.setVisibility(View.VISIBLE);
+        state.tab = 5;
+    }
+
     void OnMenu(){
         for(View v:frames.values()){
             v.setVisibility(View.GONE);
         }
         isMenu = true;
+    }
+
+    void OnAddPasien(){
+        JSONObject query = new JSONObject();
+        RadioButton gender = findViewById(lbl_pGender.getCheckedRadioButtonId());
+        try {
+            query.put("fullName", lbl_pFullName.getText().toString());
+            query.put("tittleName", lbl_pTittleName.getSelectedItem().toString());
+            query.put("gender", gender.getText().toString());
+            query.put("blood", lbl_pBloodType.getSelectedItem().toString());
+            query.put("idType", lbl_pIdType.getSelectedItem().toString());
+            query.put("idNumber", lbl_pIdNumb.getText().toString());
+            query.put("birthPlace", lbl_pBirthPlace.getText().toString());
+            query.put("birthDate", lbl_pBirthDate.getText().toString());
+
+            socket.AddPasienData(query, new EventListener() {
+                @Override
+                public void call(Object result) {
+                    if(result.toString().equals("Success")){
+                        setTab(4);
+                    }
+                }
+            });
+        } catch (JSONException e){
+
+        }
     }
 
     void CheckUser(){
@@ -351,5 +437,17 @@ public class Monitor extends AppCompatActivity {
         Intent loginIntent = new Intent(this, Login.class);
         loginIntent.putExtra("logged",logged);
         startActivity(loginIntent);
+    }
+
+
+
+    void PopulatePasienList(JSONArray list){
+
+        for (int i = 0; i < list.length(); i++){
+            TableRow itemParent = new TableRow(this);
+            itemParent.setLayoutParams(new TableLayout.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT));
+            TextView pName = new TextView(this);
+            //pName.setLayoutParams(new La);
+        }
     }
 }

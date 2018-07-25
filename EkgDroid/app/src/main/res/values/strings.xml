@@ -41,4 +41,12 @@
     <string name="lbl_dokter">Dokter Jaga</string>
     <string name="btn_tambah">Tambah Data</string>
     <string name="btn_batal">Batal</string>
+    <string name="lbl_gender">Jenis Kelamin</string>
+    <string name="lbl_gender_men">Laki-laki</string>
+    <string name="check_select_women">Perempuan</string>
+    <string name="lbl_reg_idcard">No Identitas</string>
+    <string name="lbl_bplace">Tempat Lahir</string>
+    <string name="lbl_bdate">Tanggal Lahir</string>
+    <string name="lbl_reg_bloodType">Gol. Darah</string>
+    <string name="lbl_pBloodType">Gol. Darah</string>
 </resources>

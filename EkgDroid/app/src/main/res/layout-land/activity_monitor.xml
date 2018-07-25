@@ -25,6 +25,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="40dp"
+        android:background="@color/color_navy_blue"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,7 +37,7 @@
             android:id="@+id/window_ekg"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="#6f88a3"
+            android:background="@color/color_dark_navy_blue"
             app:layout_constraintBottom_toTopOf="@+id/lbl_diagnosa"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -53,8 +54,11 @@
             android:id="@+id/lbl_diagnosa"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:paddingEnd="0dp"
+            android:paddingStart="12dp"
             android:text="@string/lbl_diagnose"
             android:textAlignment="viewStart"
+            android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@+id/window_card"
             app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
             app:layout_constraintStart_toStartOf="parent"
@@ -64,15 +68,15 @@
             android:id="@+id/window_card"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="8dp"
-            android:background="@color/color_pithcBlack"
+            android:layout_margin="4dp"
+            android:background="@color/color_dark_navy_blue"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/lbl_diagnosa">
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/lbl_pcard_interval"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
@@ -80,6 +84,7 @@
                 android:layout_marginStart="2dp"
                 android:layout_marginTop="2dp"
                 android:background="@color/color_clearWhite"
+                android:paddingStart="4dp"
                 android:text="@string/lbl_interval"
                 android:textColor="@color/color_pithcBlack"
                 app:layout_constraintBottom_toTopOf="@+id/lbl_gen_result"
@@ -102,58 +107,84 @@
                 app:layout_constraintStart_toEndOf="@+id/lbl_gen_result"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/lbl_card_name"
+                <ScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/color_tabHeader"
-                    android:text="@string/lbl_nama"
-                    android:textColor="@color/color_pithcBlack" />
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
 
-                <TextView
-                    android:id="@+id/input_card_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="8dp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/lbl_card_age"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/color_tabHeader"
-                    android:text="@string/lbl_usia"
-                    android:textColor="@color/color_pithcBlack" />
+                        <TextView
+                            android:id="@+id/lbl_card_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/color_tabHeader"
+                            android:padding="4dp"
+                            android:text="@string/lbl_nama"
+                            android:textColor="@color/color_pithcBlack"
+                            android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/input_card_age"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="8dp" />
+                        <TextView
+                            android:id="@+id/input_card_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="4dp"
+                            android:paddingStart="8dp"
+                            android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/lbl_card_tglMasuk"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/color_tabHeader"
-                    android:text="@string/lbl_tgl_masuk"
-                    android:textColor="@color/color_pithcBlack" />
+                        <TextView
+                            android:id="@+id/lbl_card_age"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/color_tabHeader"
+                            android:padding="4dp"
+                            android:text="@string/lbl_usia"
+                            android:textColor="@color/color_pithcBlack"
+                            android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/input_card_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="date" />
+                        <TextView
+                            android:id="@+id/input_card_age"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="4dp"
+                            android:paddingStart="8dp"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/lbl_card_tglMasuk"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/color_tabHeader"
+                            android:padding="4dp"
+                            android:text="@string/lbl_tgl_masuk"
+                            android:textColor="@color/color_pithcBlack"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/input_card_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:inputType="date"
+                            android:padding="4dp"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+                </ScrollView>
 
                 <TextView
                     android:id="@+id/btn_card_changeData"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="0"
                     android:background="@color/color_tabHeader"
+                    android:padding="4dp"
                     android:text="@string/btn_change_data"
                     android:textAlignment="center"
-                    android:textColor="@color/color_pithcBlack" />
+                    android:textColor="@color/color_pithcBlack"
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -168,7 +199,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/lbl_form_data"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView4">
+                app:layout_constraintTop_toBottomOf="@+id/lbl_pcard_interval">
 
             </FrameLayout>
         </android.support.constraint.ConstraintLayout>
@@ -385,9 +416,11 @@
         android:layout_marginTop="40dp"
         android:layout_weight="0.25"
         android:background="@color/color_clearWhite"
+        android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent">
 
         <TableRow
+            android:id="@+id/pasien_header"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/color_clearWhite">
@@ -426,6 +459,224 @@
                 android:textColor="@color/color_pithcBlack" />
         </TableRow>
 
+        <TableRow
+            android:id="@+id/pasien_control"
+            style="?attr/buttonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/btn_add_plist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_tambah" />
+
+            <Button
+                android:id="@+id/btn_cancel_plist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_batal" />
+        </TableRow>
+
     </TableLayout>
+
+    <LinearLayout
+        android:id="@+id/pasienreg_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
+        android:background="@color/color_navy_blue"
+        android:orientation="vertical"
+        android:visibility="visible"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/lbl_reg_pasien_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_skygrey"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="8dp"
+                    android:text="@string/lbl_nama"
+                    android:textColor="@color/color_pithcBlack" />
+
+                <LinearLayout
+                    android:id="@+id/group_p_reg_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:id="@+id/input_reg_pasien_tname"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="0dp"
+                        android:layout_weight="1"
+                        android:entries="@array/NameTittle" />
+
+                    <EditText
+                        android:id="@+id/input_reg_pasien_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:paddingEnd="0dp"
+                        android:paddingStart="8dp"
+                        android:textColor="@color/color_pithcBlack" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/lbl_reg_pasien_gender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_skygrey"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="8dp"
+                    android:text="@string/lbl_gender"
+                    android:textColor="@color/color_pithcBlack" />
+
+                <RadioGroup
+                    android:id="@+id/check_gender_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/check_select_laki"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:buttonTint="@color/color_tabHeader"
+                        android:text="@string/lbl_gender_men"
+                        android:textColor="@color/color_pithcBlack" />
+
+                    <RadioButton
+                        android:id="@+id/check_select_perempuan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:buttonTint="@color/color_tabHeader"
+                        android:text="@string/check_select_women"
+                        android:textColor="@color/color_pithcBlack" />
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/lbl_reg_pasien_bloodtype"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/color_skygrey"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="8dp"
+                    android:text="@string/lbl_reg_bloodType"
+                    android:textColor="@color/color_pithcBlack" />
+
+                <Spinner
+                    android:id="@+id/input_reg_pasien_bloodtype"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="0dp"
+                    android:layout_weight="1"
+                    android:entries="@array/BloodType" />
+
+                <TextView
+                    android:id="@+id/lbl_reg_pasien_idcard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_skygrey"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="8dp"
+                    android:text="@string/lbl_reg_idcard"
+                    android:textColor="@color/color_pithcBlack" />
+
+                <LinearLayout
+                    android:id="@+id/group_p_reg_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:id="@+id/input_reg_pasien_idtype"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="0dp"
+                        android:layout_weight="1"
+                        android:entries="@array/IDType" />
+
+                    <EditText
+                        android:id="@+id/input_reg_pasien_idnumb"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:ems="10"
+                        android:inputType="number"
+                        android:paddingEnd="0dp"
+                        android:paddingStart="8dp"
+                        android:textColor="@color/color_pithcBlack" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/lbl_reg_pasien_bplace"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_skygrey"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="8dp"
+                    android:text="@string/lbl_bplace"
+                    android:textColor="@color/color_pithcBlack" />
+
+                <EditText
+                    android:id="@+id/input_reg_pasien_bplace"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="8dp"
+                    android:textColor="@color/color_pithcBlack" />
+
+                <TextView
+                    android:id="@+id/lbl_reg_pasien_bdate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_skygrey"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="8dp"
+                    android:text="@string/lbl_bdate"
+                    android:textColor="@color/color_pithcBlack" />
+
+                <EditText
+                    android:id="@+id/input_reg_pasien_bdate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="text|date"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="8dp"
+                    android:textColor="@color/color_pithcBlack" />
+
+            </LinearLayout>
+        </ScrollView>
+
+        <Button
+            android:id="@+id/btn_reg_psubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_simpan" />
+
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

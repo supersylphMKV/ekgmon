@@ -4,4 +4,27 @@
         <item>Dokter</item>
         <item>Operator</item>
     </string-array>
+    <string-array name="NameTittle">
+        <item>Anak</item>
+        <item>Tn</item>
+        <item>Nn</item>
+        <item>Ny</item>
+    </string-array>
+    <string-array name="IDType">
+        <item>KTP</item>
+        <item>KTA</item>
+        <item>SIM</item>
+        <item>PASSPORT</item>
+    </string-array>
+    <string-array name="BloodType">
+        <item>A-</item>
+        <item>A</item>
+        <item>A+</item>
+        <item>B-</item>
+        <item>B</item>
+        <item>B+</item>
+        <item>O-</item>
+        <item>O</item>
+        <item>O+</item>
+    </string-array>
 </resources>
