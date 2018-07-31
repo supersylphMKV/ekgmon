@@ -10,7 +10,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
-        <activity android:name=".Monitor" android:launchMode="singleTask" >
+        <activity
+            android:name=".Monitor"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -25,11 +27,6 @@
                 android:resource="@xml/device_filter"/>
             <meta-data android:name="android.hardware.usb.action.USB_DEVICE_DETACHED"
                 android:resource="@xml/device_filter"/>
-        </activity>
-        <activity android:name=".mon">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
         <activity android:name=".Login" android:configChanges="orientation|screenSize"/>
         <activity android:name=".Daftar" />

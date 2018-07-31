@@ -73,13 +73,11 @@ function Login(query,fn){
     if(datatype == '[object String]'){
 
     } else if(datatype == '[object Object]'){
-        if('userData' in query){
-            if('userName' in query.userData){
-                userData.userName = query.userData.userName;
-            }
-            if('password' in query.userData){
-                userData.password = query.userData.password;
-            }
+        if('userName' in query){
+            userData.userName = query.userName;
+        }
+        if('password' in query){
+            userData.password = query.password;
         }
 
         r.table('d').filter({userName : userData.userName}).run(function(err,res){
@@ -91,25 +89,22 @@ function Login(query,fn){
 
     function CheckUserData(data){
         if(data == null){
-            fn(retObj.err, retObj.res);
+            fn(retObj);
         } else {
             if(datatype == '[object String]'){
-                retObj.err = null;
-                retObj.res = true;
-                fn(retObj.err, retObj.res);
+                fn(retObj);
             } else {
                 if(data.length && userData.userName == data[0].userName){
                     if(userData.password == data[0].password){
                         retObj.err = null;
-                        retObj.res = true;
-                        fn(retObj.err, retObj.res);
+                        retObj.res = data[0];
+                        fn(retObj);
                     } else {
                         retObj.err = 'Wrong Password';
-                        retObj.res = false;
-                        fn(retObj.err, retObj.res);
+                        fn(retObj);
                     }
                 } else {
-                    fn(retObj.err, retObj.res);
+                    fn(retObj);
                 }
             }
         }

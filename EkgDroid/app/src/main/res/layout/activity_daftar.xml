@@ -4,30 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_navy_blue"
+    android:theme="@style/Theme.AppCompat.NoActionBar"
     tools:context=".Daftar">
 
-    <ScrollView
+    <Spinner
+        android:id="@+id/input_usertype"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:entries="@array/EntryType"
+        android:padding="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/lbl_register_info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_usertype">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <Spinner
-                android:id="@+id/input_usertype"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:entries="@array/EntryType" />
 
             <View
                 android:id="@+id/divider"
@@ -35,42 +43,210 @@
                 android:layout_height="2dp"
                 android:background="?android:attr/listDivider" />
 
-            <TextView
-                android:id="@+id/lbl_nama"
+            <LinearLayout
+                android:id="@+id/group_dData"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingStart="8dp"
-                android:text="@string/lbl_nama"
-                android:textAlignment="textStart" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone">
 
-            <EditText
-                android:id="@+id/input_nama"
-                style="@android:style/Widget.Material.EditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="textPersonName" />
+                <TextView
+                    android:id="@+id/lbl_nama"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_dark_navy_blue"
+                    android:padding="4dp"
+                    android:text="@string/lbl_nama"
+                    android:textAlignment="textStart" />
 
-            <TextView
-                android:id="@+id/lbl_nip"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingStart="8dp"
-                android:text="@string/lbl_nip"
-                android:textAlignment="textStart" />
+                <EditText
+                    android:id="@+id/input_nama"
+                    style="@android:style/Widget.Material.EditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:ems="10"
+                    android:inputType="textPersonName" />
 
-            <EditText
-                android:id="@+id/input_nip"
+                <TextView
+                    android:id="@+id/lbl_nip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_dark_navy_blue"
+                    android:padding="4dp"
+                    android:text="@string/lbl_nip"
+                    android:textAlignment="textStart" />
+
+                <EditText
+                    android:id="@+id/input_nip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:ems="10"
+                    android:inputType="number" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/group_pData"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="number" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/lbl_reg_pasien_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_dark_navy_blue"
+                    android:padding="4dp"
+                    android:text="@string/lbl_nama" />
+
+                <LinearLayout
+                    android:id="@+id/group_p_reg_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:id="@+id/input_reg_pasien_tname"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="0dp"
+                        android:layout_weight="1"
+                        android:entries="@array/NameTittle" />
+
+                    <EditText
+                        android:id="@+id/input_reg_pasien_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:paddingEnd="0dp"
+                        android:paddingStart="8dp"
+                        android:textColor="@color/color_pithcBlack" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/lbl_reg_pasien_gender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_dark_navy_blue"
+                    android:padding="4dp"
+                    android:text="@string/lbl_gender" />
+
+                <RadioGroup
+                    android:id="@+id/check_gender_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/check_select_laki"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:buttonTint="@color/color_tabHeader"
+                        android:text="@string/lbl_gender_men"
+                        android:textColor="@color/color_pithcBlack" />
+
+                    <RadioButton
+                        android:id="@+id/check_select_perempuan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:buttonTint="@color/color_tabHeader"
+                        android:text="@string/check_select_women"
+                        android:textColor="@color/color_pithcBlack" />
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/lbl_reg_pasien_bloodtype"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_dark_navy_blue"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="8dp"
+                    android:text="@string/lbl_reg_bloodType" />
+
+                <Spinner
+                    android:id="@+id/input_reg_pasien_bloodtype"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="0dp"
+                    android:layout_weight="1"
+                    android:entries="@array/BloodType" />
+
+                <TextView
+                    android:id="@+id/lbl_reg_pasien_idcard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_dark_navy_blue"
+                    android:padding="4dp"
+                    android:text="@string/lbl_reg_idcard" />
+
+                <LinearLayout
+                    android:id="@+id/group_p_reg_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:id="@+id/input_reg_pasien_idtype"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="0dp"
+                        android:layout_weight="1"
+                        android:entries="@array/IDType" />
+
+                    <EditText
+                        android:id="@+id/input_reg_pasien_idnumb"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:ems="10"
+                        android:inputType="number"
+                        android:paddingEnd="0dp"
+                        android:paddingStart="8dp"
+                        android:textColor="@color/color_pithcBlack" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/lbl_reg_pasien_bplace"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_dark_navy_blue"
+                    android:padding="4dp"
+                    android:text="@string/lbl_bplace" />
+
+                <EditText
+                    android:id="@+id/input_reg_pasien_bplace"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="8dp"
+                    android:textColor="@color/color_pithcBlack" />
+
+                <TextView
+                    android:id="@+id/lbl_reg_pasien_bdate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_dark_navy_blue"
+                    android:padding="4dp"
+                    android:text="@string/lbl_bdate" />
+
+                <EditText
+                    android:id="@+id/input_reg_pasien_bdate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="text|date"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="8dp"
+                    android:textColor="@color/color_pithcBlack" />
+            </LinearLayout>
 
             <View
                 android:id="@+id/divider2"
@@ -83,8 +259,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingStart="8dp"
-                android:paddingTop="8dp"
+                android:background="@color/color_dark_navy_blue"
+                android:padding="4dp"
                 android:text="@string/lbl_User"
                 android:textAlignment="textStart" />
 
@@ -102,8 +278,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingStart="8dp"
-                android:paddingTop="8dp"
+                android:background="@color/color_dark_navy_blue"
+                android:padding="4dp"
                 android:text="@string/lbl_mail"
                 android:textAlignment="textStart" />
 
@@ -121,8 +297,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingStart="8dp"
-                android:paddingTop="8dp"
+                android:background="@color/color_dark_navy_blue"
+                android:padding="4dp"
                 android:text="@string/lbl_sandi"
                 android:textAlignment="textStart" />
 
@@ -139,8 +315,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingStart="8dp"
-                android:paddingTop="8dp"
+                android:background="@color/color_dark_navy_blue"
+                android:padding="4dp"
                 android:text="@string/lbl_ulangSandi"
                 android:textAlignment="textStart" />
 
@@ -153,20 +329,27 @@
                 android:ems="10"
                 android:inputType="textPassword" />
 
-            <TextView
-                android:id="@+id/lbl_register_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="4dp" />
-
-            <Button
-                android:id="@+id/btn_submit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/btn_simpan" />
-
         </LinearLayout>
     </ScrollView>
+
+    <TextView
+        android:id="@+id/lbl_register_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_submit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
+
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_simpan"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lbl_register_info" />
 
 </android.support.constraint.ConstraintLayout>

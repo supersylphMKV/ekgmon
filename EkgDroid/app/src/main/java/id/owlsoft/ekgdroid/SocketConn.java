@@ -2,6 +2,7 @@ package id.owlsoft.ekgdroid;
 
 import android.content.Context;
 import android.support.v7.util.DiffUtil;
+import android.util.JsonReader;
 import android.util.Log;
 
 import com.github.nkzawa.emitter.Emitter;
@@ -49,6 +50,39 @@ class SocketConn {
         } catch (URISyntaxException e) {
             Log.e("error", e.toString());
         }
+    }
+
+    public static synchronized void Login(String user, String password, EventListener cb){
+        JSONObject userData = new JSONObject();
+        try {
+            userData.put("userName", user);
+            userData.put("password", password);
+
+            mSocket.emit("login", userData, new Ack() {
+                @Override
+                public void call(Object... args) {
+                    try {
+                        JSONArray objArr = new JSONArray(args);
+                        JSONObject objRes = (JSONObject) objArr.get(0);
+
+                        if(objRes.get("err").toString().equals("null")){
+                            cb.call(objRes.getJSONObject("res"));
+                        } else {
+                            cb.call(objRes.getString("err"));
+                        }
+                    } catch (JSONException e){
+                        Log.e("json",e.toString());
+                    }
+                }
+            });
+
+        } catch (JSONException e){
+
+        }
+    }
+
+    public static synchronized void AddDokterData(JSONObject query, EventListener cb){
+
     }
 
     public static synchronized void AddPasienData(JSONObject query, EventListener cb){

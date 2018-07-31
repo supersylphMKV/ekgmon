@@ -6,6 +6,8 @@ import android.util.Log;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
+import org.json.JSONObject;
+
 import java.net.URISyntaxException;
 
 public class AppState {
@@ -30,4 +32,6 @@ public class AppState {
 
     public static boolean isLogged = false;
     public static int tab = 1;
+    public static int loginMode = 0;
+    public static JSONObject userData;
 }

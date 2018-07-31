@@ -45,7 +45,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
 import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.sql.Wrapper;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,12 +60,12 @@ public class Monitor extends AppCompatActivity {
 
     Boolean logged = false;
 
-    Button btn_ecg, btn_medrec, btn_info, btn_exit,btn_detect,btn_record,btn_setting,btn_pList_tambah,btn_pList_batal,btn_pSubmit;
-    LinearLayout frame_medrec, frame_info, frame_menu, form_pData, frame_pReg;
-    ConstraintLayout frame_ecg;
+    Button btn_ecg, btn_medrec, btn_info, btn_exit,btn_detect,btn_record,btn_setting;
+    LinearLayout frame_ecg, frame_medrec, frame_info, frame_menu, form_pData, frame_pReg;
     FrameLayout frame_menu_spacer, ecg_window;
     TableLayout frame_pasien;
-    TextView lbl_device_info,btn_card_changeData;
+    TextView lbl_device_info, resBpm;
+    TextView res_range_rr, res_cur_rr, res_range_pr, res_cur_pr, res_range_qt, res_cur_qt, res_range_qrs, res_cur_qrs;
     TextView lbl_pFullName, lbl_pBirthPlace, lbl_pBirthDate, lbl_pIdNumb;
     Spinner lbl_pIdType, lbl_pTittleName, lbl_pBloodType;
     RadioGroup  lbl_pGender;
@@ -85,6 +90,8 @@ public class Monitor extends AppCompatActivity {
     boolean usbConnected;
     boolean isMenu;
 
+    int lastVal = 0;
+
     @Override
     protected void onNewIntent(Intent intent){
         super.onNewIntent(intent);
@@ -97,7 +104,7 @@ public class Monitor extends AppCompatActivity {
                 Map<String, UsbDevice> connectedDevices = usbManager.getDeviceList();
                 for (UsbDevice device : connectedDevices.values()) {
                     if (device.getVendorId() == 0x1a86 && device.getProductId() == 0x7523) {
-                        //Log.i("dev", "Device found: " + device.getDeviceName());
+                        Log.i("dev", "Device found: " + device.getDeviceName());
                         usbD = device;
                         lbl_device_info.setText("ready");
                         lbl_device_info.setTextColor(Color.BLUE);
@@ -131,14 +138,15 @@ public class Monitor extends AppCompatActivity {
         graph = new GraphDrawer(this);
 
         lbl_device_info = findViewById(R.id.lbl_device_info);
-        lbl_pBirthDate = findViewById(R.id.input_reg_pasien_bdate);
-        lbl_pBirthPlace = findViewById(R.id.input_reg_pasien_bplace);
-        lbl_pFullName = findViewById(R.id.input_reg_pasien_name);
-        lbl_pTittleName = findViewById(R.id.input_reg_pasien_tname);
-        lbl_pGender = findViewById(R.id.check_gender_group);
-        lbl_pIdType = findViewById(R.id.input_reg_pasien_idtype);
-        lbl_pIdNumb = findViewById(R.id.input_reg_pasien_idnumb);
-        lbl_pBloodType = findViewById(R.id.input_reg_pasien_bloodtype);
+        resBpm = findViewById(R.id.res_bpm);
+        res_cur_rr = findViewById(R.id.res_current_rr);
+        res_range_rr = findViewById(R.id.res_range_rr);
+        res_cur_pr = findViewById(R.id.res_current_pr);
+        res_range_pr = findViewById(R.id.res_range_pr);
+        res_cur_qt = findViewById(R.id.res_current_qt);
+        res_range_qt = findViewById(R.id.res_range_qt);
+        res_cur_qrs = findViewById(R.id.res_current_qrs);
+        res_range_qrs = findViewById(R.id.res_range_qrs);
 
         btn_ecg = (Button) findViewById(R.id.btn_test);
         btn_medrec = (Button)findViewById(R.id.btn_db);
@@ -147,19 +155,12 @@ public class Monitor extends AppCompatActivity {
         btn_detect = findViewById(R.id.btn_deteksi);
         btn_record = findViewById(R.id.btn_record);
         btn_setting = findViewById(R.id.btn_setting);
-        btn_card_changeData = findViewById(R.id.btn_card_changeData);
-        btn_pList_batal = findViewById(R.id.btn_cancel_plist);
-        btn_pList_tambah = findViewById(R.id.btn_add_plist);
-        btn_pSubmit = findViewById(R.id.btn_reg_psubmit);
 
-        frame_ecg = (ConstraintLayout)findViewById(R.id.body_frame);
+        frame_ecg = findViewById(R.id.body_frame);
         frame_menu = (LinearLayout)findViewById(R.id.menu_frame);
         frame_medrec = (LinearLayout)findViewById(R.id.db_frame);
         frame_info = (LinearLayout)findViewById(R.id.info_frame);
-        form_pData = findViewById(R.id.lbl_form_data);
         frame_menu_spacer = (FrameLayout) findViewById(R.id.menu_spacer);
-        frame_pasien = findViewById(R.id.pasien_frame);
-        frame_pReg = findViewById(R.id.pasienreg_frame);
 
         ecg_window = findViewById(R.id.window_ekg);
         ecg_window.addView(graph);
@@ -170,8 +171,22 @@ public class Monitor extends AppCompatActivity {
         frames.put("frame_ecg", frame_ecg);
         frames.put("frame_medrec", frame_medrec);
         frames.put("frame_info", frame_info);
-        frames.put("frame_pasien", frame_pasien);
-        frames.put("frame_pReg", frame_pReg);
+
+        graph.OnChangeDIagnosticListener(new EventListener() {
+            @Override
+            public void call(Object result) {
+                IntervalData res = (IntervalData)result;
+                resBpm.setText(String.valueOf(res.bpm));
+                res_cur_rr.setText(String.valueOf(res.currRRIntervals));
+                res_range_rr.setText(res.minRR + " - " + res.maxRR + " ms");
+                res_cur_pr.setText(String.valueOf(res.currPRIntervals));
+                res_range_pr.setText(res.minPR + " - " + res.maxPR + " ms");
+                res_cur_qt.setText(String.valueOf(res.currQTIntervals));
+                res_range_qt.setText(res.minQT + " - " + res.maxQT + " ms");
+                res_cur_qrs.setText(String.valueOf(res.currQRSDuration));
+                res_range_qrs.setText(res.minQRS + " - " + res.maxQRS + " ms");
+            }
+        });
 
         vto = ecg_window.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -209,24 +224,6 @@ public class Monitor extends AppCompatActivity {
                 setTab(3);
             }
         });
-        btn_card_changeData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setTab(4);
-            }
-        });
-        btn_pList_batal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setTab(1);
-            }
-        });
-        btn_pList_tambah.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setTab(5);
-            }
-        });
         btn_exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -246,13 +243,12 @@ public class Monitor extends AppCompatActivity {
         btn_record.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                graph.isRecording = !graph.isRecording;
 
-            }
-        });
-        btn_pSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                OnAddPasien();
+                if(!graph.isRecording){
+                    Double[] recordRes = graph.GetRecord();
+                    graph.StopDraw();
+                }
             }
         });
         frame_menu_spacer.setOnClickListener(new View.OnClickListener() {
@@ -304,9 +300,6 @@ public class Monitor extends AppCompatActivity {
             case 4:
                 OnPasien();
                 break;
-            case 5:
-                OnPRegister();
-                break;
             default:
                 OnECG();
                 break;
@@ -314,20 +307,48 @@ public class Monitor extends AppCompatActivity {
     }
 
     void startSerialConnection() {
-
         if (serial != null) {
-            serial.open();
-            serial.setBaudRate(9600);
-            serial.setDataBits(UsbSerialInterface.DATA_BITS_8);
-            serial.setStopBits(UsbSerialInterface.STOP_BITS_1);
-            serial.setParity(UsbSerialInterface.PARITY_NONE);
-            serial.setFlowControl(UsbSerialInterface.FLOW_CONTROL_OFF);
-
             usbConnected = true;
 
             if(graph.isDrawing){
+                serial.close();
                 graph.StopDraw();
             } else {
+                serial.open();
+                serial.setBaudRate(9600);
+                serial.setDataBits(UsbSerialInterface.DATA_BITS_8);
+                serial.setStopBits(UsbSerialInterface.STOP_BITS_1);
+                serial.setParity(UsbSerialInterface.PARITY_NONE);
+                serial.setFlowControl(UsbSerialInterface.FLOW_CONTROL_OFF);
+                serial.read(new UsbSerialInterface.UsbReadCallback() {
+
+                    @Override
+                    public void onReceivedData(byte[] bytes) {
+                        ByteBuffer wrap = ByteBuffer.wrap(bytes);
+                        String tVal = new String(bytes, StandardCharsets.US_ASCII);
+                        String[] pVal = tVal.split("\\s+");
+                        int val = 0;
+                        try {
+                            for(String s : pVal){
+                                val = Integer.parseInt(s.trim());
+                                //Log.i("rcvd ", "char : " + tVal + ", val : " + val);
+                                graph.InputData(val);
+                                lastVal = val;
+                            }
+
+                        } catch (NumberFormatException e){
+                            Log.e("parse",e.toString());
+                            graph.InputData(lastVal);
+                        }
+                        //graph.InputData(wrap.getInt(1));
+
+                       /* if(bytes.length == 4){
+                            int intVal = wrap.getInt();
+                            graph.InputData(intVal);
+                            //Log.i("rcvd", "char : " + wrap.getChar() + "int : " + intVal);
+                        }*/
+                    }
+                });
                 graph.StartDraw();
             }
         }
@@ -386,47 +407,11 @@ public class Monitor extends AppCompatActivity {
         state.tab = 4;
     }
 
-    void OnPRegister(){
-        for(View v:frames.values()){
-            v.setVisibility(View.GONE);
-        }
-        frame_menu.setVisibility(View.GONE);
-        frame_menu_spacer.setVisibility(View.GONE);
-        frame_pReg.setVisibility(View.VISIBLE);
-        state.tab = 5;
-    }
-
     void OnMenu(){
         for(View v:frames.values()){
             v.setVisibility(View.GONE);
         }
         isMenu = true;
-    }
-
-    void OnAddPasien(){
-        JSONObject query = new JSONObject();
-        RadioButton gender = findViewById(lbl_pGender.getCheckedRadioButtonId());
-        try {
-            query.put("fullName", lbl_pFullName.getText().toString());
-            query.put("tittleName", lbl_pTittleName.getSelectedItem().toString());
-            query.put("gender", gender.getText().toString());
-            query.put("blood", lbl_pBloodType.getSelectedItem().toString());
-            query.put("idType", lbl_pIdType.getSelectedItem().toString());
-            query.put("idNumber", lbl_pIdNumb.getText().toString());
-            query.put("birthPlace", lbl_pBirthPlace.getText().toString());
-            query.put("birthDate", lbl_pBirthDate.getText().toString());
-
-            socket.AddPasienData(query, new EventListener() {
-                @Override
-                public void call(Object result) {
-                    if(result.toString().equals("Success")){
-                        setTab(4);
-                    }
-                }
-            });
-        } catch (JSONException e){
-
-        }
     }
 
     void CheckUser(){
@@ -437,17 +422,5 @@ public class Monitor extends AppCompatActivity {
         Intent loginIntent = new Intent(this, Login.class);
         loginIntent.putExtra("logged",logged);
         startActivity(loginIntent);
-    }
-
-
-
-    void PopulatePasienList(JSONArray list){
-
-        for (int i = 0; i < list.length(); i++){
-            TableRow itemParent = new TableRow(this);
-            itemParent.setLayoutParams(new TableLayout.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT));
-            TextView pName = new TextView(this);
-            //pName.setLayoutParams(new La);
-        }
     }
 }

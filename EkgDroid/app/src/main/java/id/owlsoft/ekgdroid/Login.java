@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.Ack;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,7 +54,7 @@ public class Login extends Activity {
                 if(io.mSocket.connected()){
                     startActivity(intentDaftar);
                 } else {
-                    SetLoginInfo("Tidak ada koneksi !");
+                    SetLoginInfo(getString(R.string.info_noConnection));
                 }
             }
         });
@@ -61,7 +62,29 @@ public class Login extends Activity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-                Login(inputUser.getText().toString(), inputPassword.getText().toString());
+                SetLoginInfo("");
+                if(io.mSocket.connected()){
+                    io.Login(inputUser.getText().toString(), inputPassword.getText().toString(), new EventListener() {
+                        @Override
+                        public void call(Object result) {
+                            if(result instanceof String){
+                                if(result.equals("Not Defined")){
+                                    SetLoginInfo(getString(R.string.info_dataNotFound));
+                                }else if(result.equals("Wrong Password")){
+                                    SetLoginInfo(getString(R.string.info_notMatch));
+                                }
+                            } else if(result instanceof JSONObject){
+                                state.userData = (JSONObject)result;
+                                state.isLogged = true;
+                                startActivity(main);
+                            }
+
+                        }
+                    });
+                } else {
+                    SetLoginInfo(getString(R.string.info_noConnection));
+                }
+
             }
         });
     }
@@ -92,12 +115,12 @@ public class Login extends Activity {
                             state.isLogged = true;
                             startActivity(main);
                         } else {
-                            SetLoginInfo("Data tidak ditemukan !");
+                            SetLoginInfo(getString(R.string.info_dataNotFound));
                         }
                     }
                 });
             } else {
-                SetLoginInfo("Tidak ada koneksi !");
+                SetLoginInfo(getString(R.string.info_noConnection));
             }
 
         } catch (JSONException e){

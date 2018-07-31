@@ -2,7 +2,7 @@
 <resources>
     <string-array name="EntryType">
         <item>Dokter</item>
-        <item>Operator</item>
+        <item>User</item>
     </string-array>
     <string-array name="NameTittle">
         <item>Anak</item>

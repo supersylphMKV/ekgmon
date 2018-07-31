@@ -7,8 +7,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -26,9 +29,15 @@ public class Daftar extends Activity {
 
     SocketConn socketConn = SocketConn.getInstance();
     Button btn_submit;
-    EditText input_fullname,input_nip,input_user,input_password,input_passCheck;
+    EditText input_fullname,input_nip;
+    EditText input_pFullname, input_pIdNumb, input_pBirthPlace, input_pBirthDate;
+    Spinner input_pTittleName, input_pIdType, input_pBloodType;
+    RadioGroup input_pGender;
+    EditText input_user,input_password,input_passCheck;
     Spinner input_usertype;
     TextView lbl_info;
+    LinearLayout group_dData,group_pData;
+
     Intent intentLogin;
 
     @Override
@@ -42,13 +51,44 @@ public class Daftar extends Activity {
 
         btn_submit = (Button)findViewById(R.id.btn_submit);
         input_usertype = findViewById(R.id.input_usertype);
-        input_fullname = findViewById(R.id.input_nama);
-        input_nip = findViewById(R.id.input_nip);
+
         input_user = findViewById(R.id.input_user);
         input_password = findViewById(R.id.input_sandi);
         input_passCheck = findViewById(R.id.input_sandi2);
+
+        group_dData = findViewById(R.id.group_dData);
+        input_fullname = findViewById(R.id.input_nama);
+        input_nip = findViewById(R.id.input_nip);
+
+        group_pData = findViewById(R.id.group_pData);
+        input_pFullname = findViewById(R.id.input_reg_pasien_name);
+        input_pTittleName = findViewById(R.id.input_reg_pasien_tname);
+        input_pBloodType = findViewById(R.id.input_reg_pasien_bloodtype);
+        input_pIdType = findViewById(R.id.input_reg_pasien_idtype);
+        input_pIdNumb = findViewById(R.id.input_reg_pasien_idnumb);
+        input_pGender = findViewById(R.id.check_gender_group);
+        input_pBirthPlace = findViewById(R.id.input_reg_pasien_bplace);
+        input_pBirthDate = findViewById(R.id.input_reg_pasien_bdate);
+
         lbl_info = findViewById(R.id.lbl_register_info);
 
+        input_usertype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(adapterView.getItemAtPosition(i).toString().equals("Dokter")){
+                    group_dData.setVisibility(View.VISIBLE);
+                    group_pData.setVisibility(View.GONE);
+                } else {
+                    group_pData.setVisibility(View.VISIBLE);
+                    group_dData.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
