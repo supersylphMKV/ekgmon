@@ -6,13 +6,18 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v4.content.res.TypedArrayUtils;
 import android.util.AttributeSet;
+import android.util.FloatProperty;
 import android.util.Log;
 import android.view.View;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Handler;
 
@@ -29,8 +34,8 @@ public class GraphDrawer extends View{
     List<Vector2> points = new ArrayList<>();
     //List<Float> reservedVal = new ArrayList<>(Arrays.asList(100,-10,80,-20,120,-10));
     byte[] buffers = new byte[0];
-    double[] reservedVal = new double[0];
-    List<Double> recordedVal = new ArrayList<>();
+    float[] reservedVal = new float[0];
+    List<Float> recordedVal = new ArrayList<>();
     List<Integer> pIdx = new ArrayList<>();
     List<Integer> qIdx = new ArrayList<>();
     List<Integer> rIdx = new ArrayList<>();
@@ -59,6 +64,7 @@ public class GraphDrawer extends View{
     int rCounter = 0;
 
     List<EventListener> diagnoseChange = new ArrayList<>();
+    List<EventListener> onTestDone = new ArrayList<>();
 
     private void init() {
         line.setColor(Color.YELLOW);
@@ -98,6 +104,10 @@ public class GraphDrawer extends View{
         diagnoseChange.add(e);
     }
 
+    public void OnTestDoneListener(EventListener e){
+        onTestDone.add(e);
+    }
+
     public void StartDraw(){
         Log.d("draw","start");
         isDrawing = true;
@@ -105,35 +115,60 @@ public class GraphDrawer extends View{
 
     public void StopDraw(){
         Log.d("draw","stop");
-        isDrawing = false;
+
+        if(onTestDone.size() > 0){
+            float[] ret = GetRecord();
+
+            for(EventListener e : onTestDone){
+                e.call(ret);
+            }
+        }
         points.clear();
+        isDrawing = false;
     }
 
     public void InputData(byte data){
-        double[] c = {(double)data};
+        float[] c = {(float)data};
         InputData(c);
     }
 
     public void InputData(int data){
-        double[] c = {(double)data};
+        float[] c = {(float)data};
         InputData(c);
     }
 
     public void InputData(float data){
-        double[] c = {(double)data};
+        float[] c = {(float)data};
         InputData(c);
     }
 
-    public Double[] GetRecord(){
-        Double[] objRet = recordedVal.toArray(new Double[recordedVal.size()]);
+    public void InputData(JSONArray data){
+       float[] f = new float[data.length()];
 
-        recordedVal.clear();
+        for(int i = 0; i < data.length(); i++){
+            try {
+                f[i] = Float.valueOf(data.getString(i));
+            } catch (JSONException e){
 
-        return objRet;
+            }
+        }
+
+        InputData(f);
     }
 
-    public  void InputData(double[] data){
-        double[] c = (double[]) Array.newInstance(reservedVal.getClass().getComponentType(), reservedVal.length + data.length);
+    public float[] GetRecord(){
+        float[] ret = new float[recordedVal.size()];
+        Iterator<Float> iterator = recordedVal.iterator();
+        for (int i = 0; i < ret.length; i++)
+        {
+            ret[i] = iterator.next().floatValue();
+        }
+        recordedVal.clear();
+        return ret;
+    }
+
+    public  void InputData(float[] data){
+        float[] c = (float[]) Array.newInstance(reservedVal.getClass().getComponentType(), reservedVal.length + data.length);
         System.arraycopy(reservedVal, 0, c, 0, reservedVal.length);
         System.arraycopy(data, 0, c, reservedVal.length, data.length);
         reservedVal = c;
@@ -229,7 +264,7 @@ public class GraphDrawer extends View{
                 }
                 reservedVal = Arrays.copyOfRange(reservedVal, 1, reservedVal.length);
             } else {
-                reservedVal = new double[0];
+                reservedVal = new float[0];
             }
             dotPos._y = mappedVal;
         } else {
@@ -264,7 +299,7 @@ public class GraphDrawer extends View{
                 ittCount++;
 
                 if(!t){
-                    if(n > 0 && p >= 0){
+                    if(n > 0 && p >= 0 && rIdx.size() > 0 &&qIdx.size() > 0){
                         currQRSDuration = ittCount + (rIdx.get(rIdx.size()-1) - qIdx.get(qIdx.size() -1))  * 10;
 
                         if(minQRS == 0 || currQRSDuration < minQRS){
@@ -277,7 +312,7 @@ public class GraphDrawer extends View{
                         t = true;
                     }
                 } else {
-                    if(n == 0 && p > 0){
+                    if(n == 0 && p > 0 && rIdx.size() > 0 && qIdx.size() > 0){
                         currQTIntervals = ittCount + (rIdx.get(rIdx.size()-1) - qIdx.get(qIdx.size() -1))  * 10;
 
                         if(minQT == 0 || currQTIntervals < minQT){

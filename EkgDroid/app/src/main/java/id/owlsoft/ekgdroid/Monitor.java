@@ -50,9 +50,13 @@ import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.sql.Wrapper;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -63,7 +67,7 @@ public class Monitor extends AppCompatActivity {
     Button btn_ecg, btn_medrec, btn_info, btn_exit,btn_detect,btn_record,btn_setting;
     LinearLayout frame_ecg, frame_medrec, frame_info, frame_menu, form_pData, frame_pReg;
     FrameLayout frame_menu_spacer, ecg_window;
-    TableLayout frame_pasien;
+    TableLayout db_frame;
     TextView lbl_device_info, resBpm;
     TextView res_range_rr, res_cur_rr, res_range_pr, res_cur_pr, res_range_qt, res_cur_qt, res_range_qrs, res_cur_qrs;
     TextView lbl_pFullName, lbl_pBirthPlace, lbl_pBirthDate, lbl_pIdNumb;
@@ -162,6 +166,8 @@ public class Monitor extends AppCompatActivity {
         frame_info = (LinearLayout)findViewById(R.id.info_frame);
         frame_menu_spacer = (FrameLayout) findViewById(R.id.menu_spacer);
 
+        db_frame = findViewById(R.id.db_parent);
+
         ecg_window = findViewById(R.id.window_ekg);
         ecg_window.addView(graph);
 
@@ -185,6 +191,36 @@ public class Monitor extends AppCompatActivity {
                 res_range_qt.setText(res.minQT + " - " + res.maxQT + " ms");
                 res_cur_qrs.setText(String.valueOf(res.currQRSDuration));
                 res_range_qrs.setText(res.minQRS + " - " + res.maxQRS + " ms");
+            }
+        });
+
+        Date dt = Calendar.getInstance().getTime();
+
+        graph.OnTestDoneListener(new EventListener() {
+            @Override
+            public void call(Object result) {
+                JSONArray testRes = new JSONArray();
+                Date dt = Calendar.getInstance().getTime();
+                JSONObject dataSend = new JSONObject();
+
+                try{
+                    for(float f : (float[])result){
+                        testRes.put(f);
+                    }
+                    dataSend.put("data", testRes);
+                    dataSend.put("user", state.userData.get("id"));
+                    dataSend.put("name", state.userData.get("fullName"));
+                    dataSend.put("date", dt);
+
+                    socket.InputData("r", dataSend, new EventListener() {
+                        @Override
+                        public void call(Object result) {
+                            Log.d("save", "Success");
+                        }
+                    });
+                } catch (JSONException e){
+
+                }
             }
         });
 
@@ -243,12 +279,7 @@ public class Monitor extends AppCompatActivity {
         btn_record.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                graph.isRecording = !graph.isRecording;
 
-                if(!graph.isRecording){
-                    Double[] recordRes = graph.GetRecord();
-                    graph.StopDraw();
-                }
             }
         });
         frame_menu_spacer.setOnClickListener(new View.OnClickListener() {
@@ -297,9 +328,6 @@ public class Monitor extends AppCompatActivity {
             case 3:
                 OnInfo();
                 break;
-            case 4:
-                OnPasien();
-                break;
             default:
                 OnECG();
                 break;
@@ -331,7 +359,6 @@ public class Monitor extends AppCompatActivity {
                         try {
                             for(String s : pVal){
                                 val = Integer.parseInt(s.trim());
-                                //Log.i("rcvd ", "char : " + tVal + ", val : " + val);
                                 graph.InputData(val);
                                 lastVal = val;
                             }
@@ -340,13 +367,6 @@ public class Monitor extends AppCompatActivity {
                             Log.e("parse",e.toString());
                             graph.InputData(lastVal);
                         }
-                        //graph.InputData(wrap.getInt(1));
-
-                       /* if(bytes.length == 4){
-                            int intVal = wrap.getInt();
-                            graph.InputData(intVal);
-                            //Log.i("rcvd", "char : " + wrap.getChar() + "int : " + intVal);
-                        }*/
                     }
                 });
                 graph.StartDraw();
@@ -371,6 +391,101 @@ public class Monitor extends AppCompatActivity {
         frame_menu.setVisibility(View.GONE);
         frame_menu_spacer.setVisibility(View.GONE);
         frame_medrec.setVisibility(View.VISIBLE);
+
+        db_frame.removeAllViews();
+
+        HashMap<String, Object> filter = new HashMap<>();
+
+        try {
+            filter.put("user", state.userData.get("id"));
+        } catch (JSONException e){
+
+        }
+
+        socket.GetList("r", filter, new EventListener() {
+            @Override
+            public void call(Object result) {
+                JSONArray objRes = (JSONArray)result;
+                try {
+                    if(objRes != null && objRes.length() > 0){
+                        for(int i = 0; i < objRes.length(); i++){
+                            JSONObject item = objRes.getJSONObject(i);
+                            Date recDate = new Date();
+                            recDate.parse(item.getString("date"));
+
+                            TableRow container = new TableRow(getBaseContext());
+                            TextView name = new TextView(getBaseContext());
+                            TextView age = new TextView(getBaseContext());
+                            TextView date = new TextView(getBaseContext());
+                            TextView resBtn = new TextView(getBaseContext());
+
+                            TableRow.LayoutParams nameParam = new TableRow.LayoutParams(0,TableRow.LayoutParams.WRAP_CONTENT);
+                            TableRow.LayoutParams ageParam = new TableRow.LayoutParams(0,TableRow.LayoutParams.WRAP_CONTENT);
+                            TableRow.LayoutParams dateParam = new TableRow.LayoutParams(0,TableRow.LayoutParams.WRAP_CONTENT);
+                            TableRow.LayoutParams btnParam = new TableRow.LayoutParams(0,TableRow.LayoutParams.WRAP_CONTENT);
+
+                            nameParam.weight = 6;
+                            ageParam.weight = 2;
+                            dateParam.weight = 3;
+                            btnParam.weight = 2;
+
+                            container.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                            name.setLayoutParams(nameParam);
+                            date.setLayoutParams(dateParam);
+                            age.setLayoutParams(ageParam);
+                            resBtn.setLayoutParams(btnParam);
+
+                            name.setPadding(2,2,2,2);
+                            date.setPadding(2,2,2,2);
+                            age.setPadding(2,2,2,2);
+                            resBtn.setPadding(2,2,2,2);
+
+                            name.setText(item.getString("name"));
+                            date.setText(recDate.getDate() + "/" + recDate.getMonth() + "/" + recDate.getYear());
+                            resBtn.setText(R.string.db_lbl_hasil);
+
+                            name.setTextColor(getColor(R.color.color_dark_navy_blue));
+                            date.setTextColor(getColor(R.color.color_dark_navy_blue));
+                            age.setTextColor(getColor(R.color.color_dark_navy_blue));
+                            resBtn.setTextColor(getColor(R.color.color_dark_navy_blue));
+
+
+                            container.addView(name);
+                            container.addView(age);
+                            container.addView(date);
+                            container.addView(resBtn);
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    db_frame.addView(container);
+                                    resBtn.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            setTab(1);
+                                            JSONArray arrayObj;
+                                            try {
+                                                arrayObj = item.getJSONArray("data");
+                                                graph.InputData(arrayObj);
+                                                graph.StartDraw();
+                                            } catch (JSONException e){
+
+                                            }
+
+
+                                        }
+                                    });
+                                }
+                            });
+
+                        }
+                    }
+                } catch (JSONException e){
+
+                }
+            }
+        });
+
         state.tab = 2;
     }
 
@@ -382,29 +497,6 @@ public class Monitor extends AppCompatActivity {
         frame_menu_spacer.setVisibility(View.GONE);
         frame_info.setVisibility(View.VISIBLE);
         state.tab = 3;
-    }
-
-    void  OnPasien(){
-
-        socket.GetList("p", null, new EventListener() {
-            @Override
-            public void call(Object result) {
-                if(result instanceof JSONArray){
-                    JSONArray resObj = (JSONArray)result;
-                    if(resObj.length() > 0){
-
-                    }
-                }
-            }
-        });
-
-        for(View v:frames.values()){
-            v.setVisibility(View.GONE);
-        }
-        frame_menu.setVisibility(View.GONE);
-        frame_menu_spacer.setVisibility(View.GONE);
-        frame_pasien.setVisibility(View.VISIBLE);
-        state.tab = 4;
     }
 
     void OnMenu(){

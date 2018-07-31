@@ -34,4 +34,5 @@ public class AppState {
     public static int tab = 1;
     public static int loginMode = 0;
     public static JSONObject userData;
+    public static JSONObject clientData;
 }
