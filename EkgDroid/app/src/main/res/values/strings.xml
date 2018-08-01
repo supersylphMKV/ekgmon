@@ -59,4 +59,5 @@
     <string name="test_numb_500">500</string>
     <string name="lbl_diag_qrs">QRS</string>
     <string name="lbl_diag_rr">RR</string>
+    <string name="btn_pasangDokter">Pasang Dokter</string>
 </resources>

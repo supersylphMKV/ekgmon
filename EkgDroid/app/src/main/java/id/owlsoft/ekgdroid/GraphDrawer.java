@@ -29,8 +29,7 @@ public class GraphDrawer extends View{
     float centerX;
     float centerY;
     boolean isDrawing;
-    boolean isTracking;
-    boolean isRecording;
+    boolean rePlaying;
     List<Vector2> points = new ArrayList<>();
     //List<Float> reservedVal = new ArrayList<>(Arrays.asList(100,-10,80,-20,120,-10));
     byte[] buffers = new byte[0];
@@ -109,20 +108,30 @@ public class GraphDrawer extends View{
     }
 
     public void StartDraw(){
-        Log.d("draw","start");
+        StartDraw(false);
+    }
+
+    public void StartDraw(boolean isReplay){
+        //Log.d("draw","start");
+        rePlaying = isReplay;
         isDrawing = true;
     }
 
     public void StopDraw(){
+        StopDraw(false);
+    }
+
+    public void StopDraw(boolean saveData){
         Log.d("draw","stop");
 
-        if(onTestDone.size() > 0){
+        if(onTestDone.size() > 0 && saveData){
             float[] ret = GetRecord();
 
             for(EventListener e : onTestDone){
                 e.call(ret);
             }
         }
+        reservedVal = new float[0];
         points.clear();
         isDrawing = false;
     }

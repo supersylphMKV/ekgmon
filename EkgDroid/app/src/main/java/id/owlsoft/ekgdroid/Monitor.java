@@ -24,6 +24,7 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.support.v7.widget.Toolbar;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -57,6 +58,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -68,10 +70,10 @@ public class Monitor extends AppCompatActivity {
     LinearLayout frame_ecg, frame_medrec, frame_info, frame_menu, form_pData, frame_pReg;
     FrameLayout frame_menu_spacer, ecg_window;
     TableLayout db_frame;
-    TextView lbl_device_info, resBpm;
+    TextView lbl_device_info, resBpm,set_client;
     TextView res_range_rr, res_cur_rr, res_range_pr, res_cur_pr, res_range_qt, res_cur_qt, res_range_qrs, res_cur_qrs;
     TextView lbl_pFullName, lbl_pBirthPlace, lbl_pBirthDate, lbl_pIdNumb;
-    Spinner lbl_pIdType, lbl_pTittleName, lbl_pBloodType;
+    Spinner lbl_pIdType, lbl_pTittleName, lbl_pBloodType, client_list;
     RadioGroup  lbl_pGender;
 
     GraphDrawer graph;
@@ -141,6 +143,8 @@ public class Monitor extends AppCompatActivity {
 
         graph = new GraphDrawer(this);
 
+        client_list = findViewById(R.id.client_list);
+
         lbl_device_info = findViewById(R.id.lbl_device_info);
         resBpm = findViewById(R.id.res_bpm);
         res_cur_rr = findViewById(R.id.res_current_rr);
@@ -159,6 +163,7 @@ public class Monitor extends AppCompatActivity {
         btn_detect = findViewById(R.id.btn_deteksi);
         btn_record = findViewById(R.id.btn_record);
         btn_setting = findViewById(R.id.btn_setting);
+        set_client = findViewById(R.id.btn_set_client);
 
         frame_ecg = findViewById(R.id.body_frame);
         frame_menu = (LinearLayout)findViewById(R.id.menu_frame);
@@ -200,7 +205,7 @@ public class Monitor extends AppCompatActivity {
             @Override
             public void call(Object result) {
                 JSONArray testRes = new JSONArray();
-                Date dt = Calendar.getInstance().getTime();
+                Date dt = Calendar.getInstance(Locale.getDefault()).getTime();
                 JSONObject dataSend = new JSONObject();
 
                 try{
@@ -282,6 +287,14 @@ public class Monitor extends AppCompatActivity {
 
             }
         });
+        set_client.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(state.userGetString("userType").equals("User")){
+
+                }
+            }
+        });
         frame_menu_spacer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -296,6 +309,7 @@ public class Monitor extends AppCompatActivity {
                 });
             }
         });
+
 
         setTab(state.tab);
     }
@@ -328,6 +342,9 @@ public class Monitor extends AppCompatActivity {
             case 3:
                 OnInfo();
                 break;
+            case 4:
+                OnReplay();
+                break;
             default:
                 OnECG();
                 break;
@@ -340,7 +357,7 @@ public class Monitor extends AppCompatActivity {
 
             if(graph.isDrawing){
                 serial.close();
-                graph.StopDraw();
+                graph.StopDraw(true);
             } else {
                 serial.open();
                 serial.setBaudRate(9600);
@@ -378,16 +395,39 @@ public class Monitor extends AppCompatActivity {
         for(View v:frames.values()){
             v.setVisibility(View.GONE);
         }
+        graph.StopDraw();
+
+        ResetDiagVal();
+
+        btn_record.setVisibility(View.GONE);
+        btn_detect.setVisibility(View.VISIBLE);
+        btn_setting.setVisibility(View.GONE);
         frame_menu.setVisibility(View.GONE);
         frame_menu_spacer.setVisibility(View.GONE);
         frame_ecg.setVisibility(View.VISIBLE);
         state.tab = 1;
     }
 
+    void OnReplay(){
+        for(View v:frames.values()){
+            v.setVisibility(View.GONE);
+        }
+
+        ResetDiagVal();
+
+        btn_record.setVisibility(View.GONE);
+        btn_detect.setVisibility(View.GONE);
+        btn_setting.setVisibility(View.GONE);
+        frame_menu.setVisibility(View.GONE);
+        frame_menu_spacer.setVisibility(View.GONE);
+        frame_ecg.setVisibility(View.VISIBLE);
+    }
+
     void OnMedRec(){
         for(View v:frames.values()){
             v.setVisibility(View.GONE);
         }
+        graph.StopDraw();
         frame_menu.setVisibility(View.GONE);
         frame_menu_spacer.setVisibility(View.GONE);
         frame_medrec.setVisibility(View.VISIBLE);
@@ -395,9 +435,47 @@ public class Monitor extends AppCompatActivity {
         db_frame.removeAllViews();
 
         HashMap<String, Object> filter = new HashMap<>();
+        HashMap<String, Object> dFilter = new HashMap<>();
 
         try {
-            filter.put("user", state.userData.get("id"));
+            if(state.userData.get("userType").toString().equals("User")){
+                filter.put("user", state.userData.get("id"));
+                dFilter.put("userType", "Dokter");
+                socket.GetList("d", dFilter, new EventListener() {
+                    @Override
+                    public void call(Object result) {
+                        JSONArray objRes = (JSONArray)result;
+                        try {
+                            if(objRes != null && objRes.length() > 0){
+                                List<String> dokterSpinner = new ArrayList<>();
+                                dokterSpinner.add("Tanpa Dokter");
+
+                                for(int i = 0; i < objRes.length(); i++){
+                                    JSONObject item = objRes.getJSONObject(i);
+
+                                    dokterSpinner.add(item.getString("fullName"));
+                                }
+
+                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_spinner_item, dokterSpinner);
+
+                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        client_list.setAdapter(adapter);
+                                    }
+                                });
+                            }
+                        } catch (JSONException e){
+
+                        }
+                    }
+                });
+            } else {
+
+            }
+
         } catch (JSONException e){
 
         }
@@ -462,12 +540,12 @@ public class Monitor extends AppCompatActivity {
                                     resBtn.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
-                                            setTab(1);
+                                            setTab(4);
                                             JSONArray arrayObj;
                                             try {
                                                 arrayObj = item.getJSONArray("data");
                                                 graph.InputData(arrayObj);
-                                                graph.StartDraw();
+                                                graph.StartDraw(true);
                                             } catch (JSONException e){
 
                                             }
@@ -489,10 +567,23 @@ public class Monitor extends AppCompatActivity {
         state.tab = 2;
     }
 
+    void ResetDiagVal(){
+        resBpm.setText("");
+        res_cur_qrs.setText("");
+        res_cur_qt.setText("");
+        res_cur_pr.setText("");
+        res_cur_rr.setText("");
+        res_range_qrs.setText("");
+        res_range_qt.setText("");
+        res_range_pr.setText("");
+        res_range_rr.setText("");
+    }
+
     void OnInfo(){
         for(View v:frames.values()){
             v.setVisibility(View.GONE);
         }
+        graph.StopDraw();
         frame_menu.setVisibility(View.GONE);
         frame_menu_spacer.setVisibility(View.GONE);
         frame_info.setVisibility(View.VISIBLE);
@@ -503,6 +594,7 @@ public class Monitor extends AppCompatActivity {
         for(View v:frames.values()){
             v.setVisibility(View.GONE);
         }
+        graph.StopDraw();
         isMenu = true;
     }
 

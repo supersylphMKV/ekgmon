@@ -6,9 +6,11 @@ import android.util.Log;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.jar.JarException;
 
 public class AppState {
     private static AppState instance = null;
@@ -35,4 +37,22 @@ public class AppState {
     public static int loginMode = 0;
     public static JSONObject userData;
     public static JSONObject clientData;
+
+    public String userGetString(String key){
+        String outReturn = null;
+
+        try{
+            outReturn = userData.getString(key);
+        }catch (JSONException e){
+        }
+
+        return outReturn;
+    }
+
+    public void userPut(String key, Object val){
+        try{
+            userData.put(key, val);
+        }catch (JSONException e){
+        }
+    }
 }

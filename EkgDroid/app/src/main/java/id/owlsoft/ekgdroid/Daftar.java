@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -168,9 +169,20 @@ public class Daftar extends Activity {
         JSONObject query = new JSONObject();
 
         try {
+            if(input_usertype.getSelectedItem().toString().equals("Dokter")){
+                query.put("fullName", input_fullname.getText().toString());
+                query.put("nip", input_nip.getText().toString());
+            } else {
+                query.put("fullName", input_pFullname.getText().toString());
+                query.put("tittleName", input_pTittleName.getSelectedItem().toString());
+                query.put("gender", ((RadioButton)findViewById(input_pGender.getCheckedRadioButtonId())).getText().toString());
+                query.put("bloodType", input_pBloodType.getSelectedItem().toString());
+                query.put("idType", input_pIdType.getSelectedItem().toString());
+                query.put("idNumb", input_pIdNumb.getText().toString());
+                query.put("birthPlace", input_pBirthPlace.getText().toString());
+                query.put("birthDate", input_pBirthDate.getText().toString());
+            }
             query.put("userName", input_user.getText().toString());
-            query.put("fullName", input_fullname.getText().toString());
-            query.put("nip", input_nip.getText().toString());
             query.put("userType", input_usertype.getSelectedItem().toString());
             query.put("password",input_password.getText().toString());
         } catch (JSONException e){

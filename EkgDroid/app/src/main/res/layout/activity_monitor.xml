@@ -264,13 +264,15 @@
             android:id="@+id/btn_record"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/btn_startReading" />
+            android:text="@string/btn_startReading"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btn_setting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/btn_setting" />
+            android:text="@string/btn_setting"
+            android:visibility="gone" />
 
     </LinearLayout>
 
@@ -286,6 +288,32 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <Spinner
+                android:id="@+id/client_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/color_tabHeader"
+                android:entries="@array/NameTittle" />
+
+            <TextView
+                android:id="@+id/btn_set_client"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/color_navy_blue"
+                android:padding="4dp"
+                android:text="@string/btn_pasangDokter"
+                android:textColor="@color/color_pithcBlack"
+                android:textSize="18sp" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/db_header"
@@ -392,28 +420,30 @@
                 android:id="@+id/btn_test"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
                 android:text="@string/btn_test" />
 
             <Button
                 android:id="@+id/btn_db"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
                 android:text="@string/btn_medrec" />
 
             <Button
                 android:id="@+id/btn_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
                 android:text="@string/btn_info" />
+
+            <Button
+                android:id="@+id/btn_setting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_setting" />
 
             <Button
                 android:id="@+id/btn_exit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
                 android:text="@string/btn_exit" />
 
             <Space
