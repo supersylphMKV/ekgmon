@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.Application;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.ColorStateList;
@@ -57,6 +59,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -68,7 +71,7 @@ public class Monitor extends AppCompatActivity {
 
     Button btn_ecg, btn_medrec, btn_info, btn_exit,btn_detect,btn_record,btn_setting;
     LinearLayout frame_ecg, frame_medrec, frame_info, frame_menu, form_pData, frame_pReg;
-    FrameLayout frame_menu_spacer, ecg_window;
+    FrameLayout frame_menu_spacer, ecg_window, ecg_grid;
     TableLayout db_frame;
     TextView lbl_device_info, resBpm,set_client;
     TextView res_range_rr, res_cur_rr, res_range_pr, res_cur_pr, res_range_qt, res_cur_qt, res_range_qrs, res_cur_qrs;
@@ -77,6 +80,7 @@ public class Monitor extends AppCompatActivity {
     RadioGroup  lbl_pGender;
 
     GraphDrawer graph;
+    GridDraw grid;
 
     ViewTreeObserver vto;
 
@@ -90,6 +94,28 @@ public class Monitor extends AppCompatActivity {
     SocketConn socket = SocketConn.getInstance();
 
     AppState state = AppState.getInstance();
+
+    UsbSerialInterface.UsbReadCallback usbReadCallback = new UsbSerialInterface.UsbReadCallback() {
+
+        @Override
+        public void onReceivedData(byte[] bytes) {
+            ByteBuffer wrap = ByteBuffer.wrap(bytes);
+            String tVal = new String(bytes, StandardCharsets.US_ASCII);
+            String[] pVal = tVal.split("\\s+");
+            int val = 0;
+            try {
+                for(String s : pVal){
+                    val = Integer.parseInt(s.trim());
+                    graph.InputData(val);
+                    lastVal = val;
+                }
+
+            } catch (NumberFormatException e){
+                Log.e("parse",e.toString());
+                graph.InputData(lastVal);
+            }
+        }
+    };
 
     Map<String, View> frames;
 
@@ -126,6 +152,20 @@ public class Monitor extends AppCompatActivity {
         }
     }
 
+    protected void DetectDevice(){
+        usbManager = (UsbManager)getSystemService(Context.USB_SERVICE);
+        Map<String, UsbDevice> connectedDevices = usbManager.getDeviceList();
+        for (UsbDevice device : connectedDevices.values()) {
+            if (device.getVendorId() == 0x1a86 && device.getProductId() == 0x7523) {
+                Log.i("dev", "Device found: " + device.getDeviceName());
+                usbD = device;
+                lbl_device_info.setText("ready");
+                lbl_device_info.setTextColor(Color.BLUE);
+                break;
+            }
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         logged = state.isLogged;
@@ -142,6 +182,7 @@ public class Monitor extends AppCompatActivity {
         actionbar.setDisplayShowTitleEnabled(false);
 
         graph = new GraphDrawer(this);
+        grid = new GridDraw(this);
 
         client_list = findViewById(R.id.client_list);
 
@@ -174,7 +215,10 @@ public class Monitor extends AppCompatActivity {
         db_frame = findViewById(R.id.db_parent);
 
         ecg_window = findViewById(R.id.window_ekg);
+        ecg_grid = findViewById(R.id.ekg_grid);
+
         ecg_window.addView(graph);
+        ecg_grid.addView(grid);
 
         if(frames == null){
             frames = new HashMap<String, View>();
@@ -240,6 +284,8 @@ public class Monitor extends AppCompatActivity {
                 dimension = new Vector2(width, height);
                 graph.SetRectDimension(width,height);
                 graph.SetCenterGraph(width - 20, height/2);
+
+                grid.SetRectDimension(width, height);
             }
         });
 
@@ -274,10 +320,19 @@ public class Monitor extends AppCompatActivity {
         btn_detect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(usbManager != null && usbD != null){
-                    usbConn = usbManager.openDevice(usbD);
-                    serial = UsbSerialDevice.createUsbSerialDevice(usbD, usbConn);
-                    startSerialConnection();
+                if(graph.isDrawing){
+                    stopSerialConnection();
+                } else {
+                    if(usbManager != null && usbD != null){
+                        usbConn = usbManager.openDevice(usbD);
+                        serial = UsbSerialDevice.createUsbSerialDevice(usbD, usbConn);
+                        startSerialConnection();
+                    } else {
+                        DetectDevice();
+                        usbConn = usbManager.openDevice(usbD);
+                        serial = UsbSerialDevice.createUsbSerialDevice(usbD, usbConn);
+                        startSerialConnection();
+                    }
                 }
             }
         });
@@ -351,43 +406,25 @@ public class Monitor extends AppCompatActivity {
         }
     }
 
+    void stopSerialConnection(){
+        if(serial != null){
+            serial.read(null);
+            serial.close();
+            usbConnected = false;
+            graph.StopDraw();
+        }
+    }
+
     void startSerialConnection() {
         if (serial != null) {
-            usbConnected = true;
-
-            if(graph.isDrawing){
-                serial.close();
-                graph.StopDraw(true);
-            } else {
-                serial.open();
-                serial.setBaudRate(9600);
-                serial.setDataBits(UsbSerialInterface.DATA_BITS_8);
-                serial.setStopBits(UsbSerialInterface.STOP_BITS_1);
-                serial.setParity(UsbSerialInterface.PARITY_NONE);
-                serial.setFlowControl(UsbSerialInterface.FLOW_CONTROL_OFF);
-                serial.read(new UsbSerialInterface.UsbReadCallback() {
-
-                    @Override
-                    public void onReceivedData(byte[] bytes) {
-                        ByteBuffer wrap = ByteBuffer.wrap(bytes);
-                        String tVal = new String(bytes, StandardCharsets.US_ASCII);
-                        String[] pVal = tVal.split("\\s+");
-                        int val = 0;
-                        try {
-                            for(String s : pVal){
-                                val = Integer.parseInt(s.trim());
-                                graph.InputData(val);
-                                lastVal = val;
-                            }
-
-                        } catch (NumberFormatException e){
-                            Log.e("parse",e.toString());
-                            graph.InputData(lastVal);
-                        }
-                    }
-                });
-                graph.StartDraw();
-            }
+            serial.open();
+            serial.setBaudRate(9600);
+            serial.setDataBits(UsbSerialInterface.DATA_BITS_8);
+            serial.setStopBits(UsbSerialInterface.STOP_BITS_1);
+            serial.setParity(UsbSerialInterface.PARITY_NONE);
+            serial.setFlowControl(UsbSerialInterface.FLOW_CONTROL_OFF);
+            serial.read(usbReadCallback);
+            graph.StartDraw();
         }
     }
 
