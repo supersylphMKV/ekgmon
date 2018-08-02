@@ -71,7 +71,13 @@ function Login(query,fn){
     };
 
     if(datatype == '[object String]'){
-
+        r.table('d').get(query).run(function(err, res){
+            if(!err){
+                retObj.err = null;
+                retObj.res = res;
+                fn(retObj);
+            }
+        });
     } else if(datatype == '[object Object]'){
         if('userName' in query){
             userData.userName = query.userName;
