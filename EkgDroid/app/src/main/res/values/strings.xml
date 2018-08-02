@@ -60,4 +60,5 @@
     <string name="lbl_diag_qrs">QRS</string>
     <string name="lbl_diag_rr">RR</string>
     <string name="btn_pasangDokter">Pasang Dokter</string>
+    <string name="btn_change_user">Ganti User</string>
 </resources>

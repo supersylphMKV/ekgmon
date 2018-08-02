@@ -2,21 +2,13 @@ package id.owlsoft.ekgdroid;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.Activity;
-import android.app.Application;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.res.ColorStateList;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -30,46 +22,34 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Space;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.felhr.usbserial.UsbSerialDevice;
 import com.felhr.usbserial.UsbSerialInterface;
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayInputStream;
-import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.sql.Wrapper;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 public class Monitor extends AppCompatActivity {
 
     Boolean logged = false;
 
-    Button btn_ecg, btn_medrec, btn_info, btn_exit,btn_detect,btn_record,btn_setting;
+    Button btn_ecg, btn_medrec, btn_info, btn_exit,btn_detect,btn_record, btn_change_user;
     LinearLayout frame_ecg, frame_medrec, frame_info, frame_menu, form_pData, frame_pReg;
     FrameLayout frame_menu_spacer, ecg_window, ecg_grid;
     TableLayout db_frame;
@@ -203,7 +183,7 @@ public class Monitor extends AppCompatActivity {
         btn_exit = (Button)findViewById(R.id.btn_exit);
         btn_detect = findViewById(R.id.btn_deteksi);
         btn_record = findViewById(R.id.btn_record);
-        btn_setting = findViewById(R.id.btn_setting);
+        btn_change_user = findViewById(R.id.btn_change_user);
         set_client = findViewById(R.id.btn_set_client);
 
         frame_ecg = findViewById(R.id.body_frame);
@@ -342,12 +322,11 @@ public class Monitor extends AppCompatActivity {
 
             }
         });
-        set_client.setOnClickListener(new View.OnClickListener() {
+        btn_change_user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(state.userGetString("userType").equals("User")){
-
-                }
+                unVerified();
+                Log.d("click", "change");
             }
         });
         frame_menu_spacer.setOnClickListener(new View.OnClickListener() {
@@ -438,7 +417,6 @@ public class Monitor extends AppCompatActivity {
 
         btn_record.setVisibility(View.GONE);
         btn_detect.setVisibility(View.VISIBLE);
-        btn_setting.setVisibility(View.GONE);
         frame_menu.setVisibility(View.GONE);
         frame_menu_spacer.setVisibility(View.GONE);
         frame_ecg.setVisibility(View.VISIBLE);
@@ -454,7 +432,6 @@ public class Monitor extends AppCompatActivity {
 
         btn_record.setVisibility(View.GONE);
         btn_detect.setVisibility(View.GONE);
-        btn_setting.setVisibility(View.GONE);
         frame_menu.setVisibility(View.GONE);
         frame_menu_spacer.setVisibility(View.GONE);
         frame_ecg.setVisibility(View.VISIBLE);

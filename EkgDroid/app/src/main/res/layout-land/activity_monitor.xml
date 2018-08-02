@@ -224,14 +224,14 @@
                 android:layout_height="0px"
                 android:layout_weight="1"
                 android:text="@string/btn_startReading"
-                app:layout_constraintBottom_toTopOf="@+id/btn_setting"
+                app:layout_constraintBottom_toTopOf="@+id/btn_change_user"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btn_deteksi" />
 
             <Button
-                android:id="@+id/btn_setting"
+                android:id="@+id/btn_change_user"
                 android:layout_width="match_parent"
                 android:layout_height="0px"
                 android:layout_weight="1"

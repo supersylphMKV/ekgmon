@@ -81,6 +81,26 @@ class SocketConn {
         }
     }
 
+    public static synchronized void Login(String id, EventListener cb){
+        mSocket.emit("login", id, new Ack() {
+            @Override
+            public void call(Object... args) {
+                try {
+                    JSONArray objArr = new JSONArray(args);
+                    JSONObject objRes = (JSONObject) objArr.get(0);
+
+                    if(objRes.get("err").toString().equals("null")){
+                        cb.call(objRes.getJSONObject("res"));
+                    } else {
+                        cb.call(objRes.getString("err"));
+                    }
+                } catch (JSONException e){
+                    Log.e("json",e.toString());
+                }
+            }
+        });
+    }
+
     public static synchronized void AddDokterData(JSONObject query, EventListener cb){
 
     }

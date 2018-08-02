@@ -29,6 +29,8 @@ public class Login extends Activity {
     EditText inputUser;
     EditText inputPassword;
 
+    String userId;
+
     SocketConn io = SocketConn.getInstance();
     AppState state = AppState.getInstance();
 
@@ -47,6 +49,12 @@ public class Login extends Activity {
         inputPassword = (EditText) findViewById(R.id.input_password);
         login_info = (TextView) findViewById(R.id.text_login_info);
         main = new Intent(this, Monitor.class);
+
+        if(!state.isLogged){
+            userId = state.readFromFile(this);
+        } else {
+            userId = "";
+        }
 
         btnDaftar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,8 +82,8 @@ public class Login extends Activity {
                                     SetLoginInfo(getString(R.string.info_notMatch));
                                 }
                             } else if(result instanceof JSONObject){
-                                state.userData = (JSONObject)result;
-                                state.isLogged = true;
+                                state.SetUserData((JSONObject)result);
+                                state.writeToFile(state.userGetString("id"),getBaseContext());
                                 startActivity(main);
                             }
 
@@ -87,6 +95,27 @@ public class Login extends Activity {
 
             }
         });
+
+        if(!userId.equals("")){
+            if(io.mSocket.connected()){
+                io.Login(userId, new EventListener() {
+                    @Override
+                    public void call(Object result) {
+                        if(result instanceof String){
+                            if(result.equals("Not Defined")){
+                                SetLoginInfo(getString(R.string.info_dataNotFound));
+                            }else if(result.equals("Wrong Password")){
+                                SetLoginInfo(getString(R.string.info_notMatch));
+                            }
+                        } else if(result instanceof JSONObject){
+                            state.SetUserData((JSONObject)result);
+                            startActivity(main);
+                        }
+
+                    }
+                });
+            }
+        }
     }
 
     void SetLoginInfo(String s){
