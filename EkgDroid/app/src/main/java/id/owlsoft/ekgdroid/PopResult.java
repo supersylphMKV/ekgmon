@@ -69,7 +69,7 @@ public class PopResult extends Activity {
 
         qrs_res.setText(String.valueOf(testResult.qrsRate));
         qrs_range.setText(testResult.qrsMin + " ms - " + testResult.qrsMax + " ms");
-        if( testResult.qrsRate < 120){
+        if( testResult.qrsRate > 80 && testResult.qrsRate < 100){
             qrs_diag.setText("Normal");
         } else {
             qrs_diag.setText("Konsultasikan dengan Dokter");
