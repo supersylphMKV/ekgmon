@@ -125,12 +125,44 @@ public class GraphDrawer extends View{
         Log.d("draw","stop");
 
         if(onTestDone.size() > 0 && saveData){
-            float[] ret = GetRecord();
+            float[] rec = GetRecord();
+            ECGRes ret = new ECGRes();
+            ret.record = rec;
+
+            for(Float f : rr)ret.rrRate += f;
+            ret.rrRate = Math.round(ret.rrRate/rr.size());
+            ret.rrMin = Math.round(minRR);
+            ret.rrMax = Math.round(maxRR);
+
+            for(Float f : pr)ret.prRate +=f;
+            ret.prRate = Math.round(ret.prRate/pr.size());
+            ret.prMin = Math.round(minPR);
+            ret.prMax = Math.round(maxPR);
+
+            for(float f : qt)ret.qtRate +=f;
+            ret.qtRate = Math.round(ret.qtRate/qt.size());
+            ret.qtMin = Math.round(minQT);
+            ret.qtMax = Math.round(maxQT);
+
+            for(float f : qrs)ret.qrsRate +=f;
+            ret.qrsRate = Math.round(ret.qrsRate/qrs.size());
+            ret.qrsMin = Math.round(minQRS);
+            ret.qrsMax = Math.round(maxQRS);
+
+            ret.beatRate = Math.round(60000/ret.rrRate);
 
             for(EventListener e : onTestDone){
                 e.call(ret);
             }
         }
+        qIdx.clear();
+        rIdx.clear();
+        pIdx.clear();
+        sIdx.clear();
+        rr.clear();
+        qt.clear();
+        qrs.clear();
+        pr.clear();
         reservedVal = new float[0];
         points.clear();
         isDrawing = false;
@@ -239,13 +271,14 @@ public class GraphDrawer extends View{
                         //Log.i("peak", String.valueOf(reservedVal[0]));
                         currRRIntervals = rCounter * 10;
                         rIdx.add(recordedVal.size()-1);
-                        if(rIdx.size() > 1){
+                        if(rIdx.size() > 1 && currRRIntervals < 2000 && currRRIntervals > 300){
                             if(minRR == 0 || currRRIntervals < minRR){
                                 minRR = currRRIntervals;
                             }
                             if(maxRR == 0 || currRRIntervals > maxRR){
                                 maxRR = currRRIntervals;
                             }
+                            rr.add(currRRIntervals);
                         }
                         CalculateQRInterval();
                         CalculateQTInterval();
@@ -277,7 +310,11 @@ public class GraphDrawer extends View{
             }
             dotPos._y = mappedVal;
         } else {
-            dotPos._y = centerY;
+            if(!rePlaying){
+                dotPos._y = centerY;
+            } else {
+                StopDraw(true);
+            }
         }
     }
 
@@ -311,12 +348,16 @@ public class GraphDrawer extends View{
                     if(n > 0 && p >= 0 && rIdx.size() > 0 &&qIdx.size() > 0){
                         currQRSDuration = ittCount + (rIdx.get(rIdx.size()-1) - qIdx.get(qIdx.size() -1))  * 10;
 
-                        if(minQRS == 0 || currQRSDuration < minQRS){
-                            minQRS = currQRSDuration;
+                        if(currQRSDuration < 200){
+                            if(minQRS == 0 || currQRSDuration < minQRS){
+                                minQRS = currQRSDuration;
+                            }
+                            if(maxQRS == 0 || currQRSDuration > maxQRS){
+                                maxQRS = currQRSDuration;
+                            }
+                            qrs.add(currQRSDuration);
                         }
-                        if(maxQRS == 0 || currQRSDuration > maxQRS){
-                            maxQRS = currQRSDuration;
-                        }
+
 
                         t = true;
                     }
@@ -324,11 +365,14 @@ public class GraphDrawer extends View{
                     if(n == 0 && p > 0 && rIdx.size() > 0 && qIdx.size() > 0){
                         currQTIntervals = ittCount + (rIdx.get(rIdx.size()-1) - qIdx.get(qIdx.size() -1))  * 10;
 
-                        if(minQT == 0 || currQTIntervals < minQT){
-                            minQT = currQTIntervals;
-                        }
-                        if(maxQT == 0 || currQTIntervals > maxQT){
-                            maxQT = currQTIntervals;
+                        if(currQTIntervals < 500){
+                            if(minQT == 0 || currQTIntervals < minQT){
+                                minQT = currQTIntervals;
+                            }
+                            if(maxQT == 0 || currQTIntervals > maxQT){
+                                maxQT = currQTIntervals;
+                            }
+                            qt.add(currQTIntervals);
                         }
 
                         at = true;
@@ -346,6 +390,8 @@ public class GraphDrawer extends View{
         boolean iq = false;
         int currIdx, lastIdx, nextIdx;
         int ittCount = 0;
+        float qBase = 0;
+        float qPeak = 0;
 
         nextIdx = rIdx.get(rIdx.size()-1);
         currIdx = nextIdx-1;
@@ -369,19 +415,27 @@ public class GraphDrawer extends View{
                     if(n < 0 && p <= 0){
                         q = true;
                         qIdx.add(currIdx);
+                        qBase = currVal;
+                        qPeak = currVal;
                     }
                 } else {
                     ittCount++;
-
-                    if(n > 0 && p >=0){
+                    if(currVal > qPeak){
+                        qPeak = currVal;
+                    }
+                    if(n > 0 && p >=0 && (qPeak - qBase > 5)){
 
                         currPRIntervals = ittCount * 10;
 
-                        if(minPR == 0 || currPRIntervals < minPR){
-                            minPR = currPRIntervals;
-                        }
-                        if(maxPR == 0 || currPRIntervals > maxPR) {
-                            maxPR = currPRIntervals;
+                        if( currPRIntervals < 500 && currPRIntervals > 50){
+                            if(minPR == 0 || currPRIntervals < minPR){
+                                minPR = currPRIntervals;
+
+                            }
+                            if(maxPR == 0 || currPRIntervals > maxPR) {
+                                maxPR = currPRIntervals;
+                            }
+                            pr.add(currPRIntervals);
                         }
 
                         iq = true;
@@ -393,5 +447,22 @@ public class GraphDrawer extends View{
             }
 
         }
+    }
+
+    public class ECGRes {
+        public float beatRate = 0;
+        public float rrRate = 0;
+        public float rrMin = 0;
+        public float rrMax = 0;
+        public float prRate = 0;
+        public float prMin = 0;
+        public float prMax = 0;
+        public float qtRate = 0;
+        public float qtMin = 0;
+        public float qtMax = 0;
+        public float qrsRate = 0;
+        public float qrsMin = 0;
+        public float qrsMax = 0;
+        public float[] record = new float[0];
     }
 }

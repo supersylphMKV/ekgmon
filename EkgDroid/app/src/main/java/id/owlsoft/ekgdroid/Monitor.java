@@ -75,6 +75,8 @@ public class Monitor extends AppCompatActivity {
 
     AppState state = AppState.getInstance();
 
+    Intent popResult;
+
     UsbSerialInterface.UsbReadCallback usbReadCallback = new UsbSerialInterface.UsbReadCallback() {
 
         @Override
@@ -224,16 +226,21 @@ public class Monitor extends AppCompatActivity {
         });
 
         Date dt = Calendar.getInstance().getTime();
+        popResult = new Intent(this, PopResult.class);
 
         graph.OnTestDoneListener(new EventListener() {
             @Override
             public void call(Object result) {
-                JSONArray testRes = new JSONArray();
+                GraphDrawer.ECGRes testResult = (GraphDrawer.ECGRes)result;
+                state.testResult = testResult;
+                popResult.putExtra("isReplay", graph.rePlaying);
+                startActivity(popResult);
+                /*JSONArray testRes = new JSONArray();
                 Date dt = Calendar.getInstance(Locale.getDefault()).getTime();
                 JSONObject dataSend = new JSONObject();
 
                 try{
-                    for(float f : (float[])result){
+                    for(float f : (float[])testResult.record){
                         testRes.put(f);
                     }
                     dataSend.put("data", testRes);
@@ -249,7 +256,7 @@ public class Monitor extends AppCompatActivity {
                     });
                 } catch (JSONException e){
 
-                }
+                }*/
             }
         });
 
@@ -300,6 +307,7 @@ public class Monitor extends AppCompatActivity {
         btn_detect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                state.isReplay = false;
                 if(graph.isDrawing){
                     stopSerialConnection();
                 } else {
@@ -344,7 +352,7 @@ public class Monitor extends AppCompatActivity {
             }
         });
 
-
+        //startActivity(popResult);
         setTab(state.tab);
     }
 
@@ -390,7 +398,7 @@ public class Monitor extends AppCompatActivity {
             serial.read(null);
             serial.close();
             usbConnected = false;
-            graph.StopDraw();
+            graph.StopDraw(true);
         }
     }
 
@@ -560,6 +568,7 @@ public class Monitor extends AppCompatActivity {
                                                 arrayObj = item.getJSONArray("data");
                                                 graph.InputData(arrayObj);
                                                 graph.StartDraw(true);
+                                                state.isReplay = true;
                                             } catch (JSONException e){
 
                                             }

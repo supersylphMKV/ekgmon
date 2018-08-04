@@ -126,34 +126,5 @@ public class Login extends Activity {
             }
         });
     }
-
-    void Login(String u, String p){
-        JSONObject userData = new JSONObject();
-        JSONObject mainQuery = new JSONObject();
-        try {
-            userData.put("userName",u);
-            userData.put("password",p);
-
-            mainQuery.put("userData", userData);
-
-            if(io.mSocket.connected()){
-                io.mSocket.emit("login", mainQuery, new Ack() {
-                    @Override
-                    public void call(Object... args) {
-                        if((boolean)args[args.length-1]){
-                            state.isLogged = true;
-                            startActivity(main);
-                        } else {
-                            SetLoginInfo(getString(R.string.info_dataNotFound));
-                        }
-                    }
-                });
-            } else {
-                SetLoginInfo(getString(R.string.info_noConnection));
-            }
-
-        } catch (JSONException e){
-            SetLoginInfo(e.toString());
-        }
-    }
+    
 }

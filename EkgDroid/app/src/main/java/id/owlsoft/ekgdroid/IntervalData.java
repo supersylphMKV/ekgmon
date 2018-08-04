@@ -14,4 +14,5 @@ public class IntervalData {
     float minQRS = 0;
     float maxQRS = 0;
     int bpm = 0;
+
 }

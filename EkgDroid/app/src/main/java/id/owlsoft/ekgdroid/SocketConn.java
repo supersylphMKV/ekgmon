@@ -101,44 +101,37 @@ class SocketConn {
         });
     }
 
-    public static synchronized void AddDokterData(JSONObject query, EventListener cb){
-
-    }
-
-    public static synchronized void AddPasienData(JSONObject query, EventListener cb){
-
-        HashMap<String, Object > filter = new HashMap<String, Object>();
+    public static synchronized void Register(JSONObject query, EventListener cb){
+        HashMap<String, Object> filterMap = new HashMap<>();
 
         try {
-            filter.put("fullName", query.getString("fullName"));
-            filter.put("birthPlace", query.getString("birthPlace"));
-            filter.put("birthDate", query.getString("birthDate"));
-            filter.put("gender",query.getString("gender"));
-
-            CheckData("p", filter, new EventListener() {
-                @Override
-                public void call(Object result) {
-                    switch ((int)result){
-                        case -1 :
-                            cb.call("error");
-                            break;
-                        case 0 :
-                            InputData("p", query, new EventListener() {
-                                @Override
-                                public void call(Object result) {
-                                    cb.call(result);
-                                }
-                            });
-                            break;
-                        default:
-                            cb.call("duplicate");
-                            break;
-                    }
-                }
-            });
+            filterMap.put("userName", query.getString("userName"));
         } catch (JSONException e){
-            cb.call(e);
+
         }
+
+
+        CheckData("p", filterMap, new EventListener() {
+            @Override
+            public void call(Object result) {
+                switch ((int)result){
+                    case -1 :
+                        cb.call("error");
+                        break;
+                    case 0 :
+                        InputData("d", query, new EventListener() {
+                            @Override
+                            public void call(Object result) {
+                                cb.call(result);
+                            }
+                        });
+                        break;
+                    default:
+                        cb.call("duplicate");
+                        break;
+                }
+            }
+        });
     }
 
     public static synchronized void InputData(String table, JSONObject data, EventListener cb){

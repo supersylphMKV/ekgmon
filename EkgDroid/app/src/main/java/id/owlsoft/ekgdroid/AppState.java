@@ -80,10 +80,12 @@ public class AppState {
     }
 
     public static boolean isLogged = false;
+    public static boolean isReplay = false;
     public static int tab = 1;
     public static int loginMode = 0;
     public static JSONObject userData;
     public static JSONObject clientData;
+    public static GraphDrawer.ECGRes testResult;
 
     public void SetUserData(JSONObject data){
         userData = data;
