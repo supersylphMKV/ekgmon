@@ -260,10 +260,10 @@ public class GraphDrawer extends View{
             float mappedVal = (-(float)reservedVal[0] + 255) * 2;
             //Log.i("val", String.valueOf(dotPos._y));
             if(reservedVal.length > 1){
-                float nextVal = (-(float)reservedVal[1] + 255) * 2;
+                /*float nextVal = (-(float)reservedVal[1] + 255) * 2;
                 if(Math.abs(nextVal - mappedVal) < 5){
                     mappedVal = mappedVal + ((nextVal - mappedVal)/2);
-                }
+                }*/
                 if(recordedVal.size() > 1){
                     double pp =  recordedVal.get(recordedVal.size() -2) - recordedVal.get(recordedVal.size()-1);
                     double pa = reservedVal[1] - reservedVal[0];
@@ -345,7 +345,7 @@ public class GraphDrawer extends View{
                 ittCount++;
 
                 if(!t){
-                    if(n > 0 && p >= 0 && rIdx.size() > 0 &&qIdx.size() > 0){
+                    if(n > 0 && p == 0 && rIdx.size() > 0 &&qIdx.size() > 0){
                         currQRSDuration = ittCount + (rIdx.get(rIdx.size()-1) - qIdx.get(qIdx.size() -1))  * 10;
 
                         if(currQRSDuration < 200){
@@ -390,6 +390,7 @@ public class GraphDrawer extends View{
         boolean iq = false;
         int currIdx, lastIdx, nextIdx;
         int ittCount = 0;
+        int flatCount = 0;
         float qBase = 0;
         float qPeak = 0;
 
@@ -423,6 +424,9 @@ public class GraphDrawer extends View{
                     if(currVal > qPeak){
                         qPeak = currVal;
                     }
+
+
+
                     if(n > 0 && p >=0 && (qPeak - qBase > 5)){
 
                         currPRIntervals = ittCount * 10;
