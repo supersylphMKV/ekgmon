@@ -3,5 +3,8 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
-  body
+    script(src='/modules/socket.io-client/dist/socket.io.js')
+    script(src='/modules/jquery/dist/jquery.js')
+  body(style='padding : 0px; margin : 0px; display : flex; height : 100vh')
     block content
+    script(src='/javascripts/ecgMonHome.js')
