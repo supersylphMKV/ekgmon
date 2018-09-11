@@ -35,6 +35,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class Monitor extends AppCompatActivity {
     LinearLayout frame_ecg, frame_medrec, frame_info, frame_menu, form_pData, frame_pReg;
     FrameLayout frame_menu_spacer, ecg_window, ecg_grid;
     TableLayout db_frame;
-    TextView lbl_device_info, resBpm,set_client;
+    TextView lbl_device_info, resBpm,set_client, lbl_diagnose;
     TextView res_range_rr, res_cur_rr, res_range_pr, res_cur_pr, res_range_qt, res_cur_qt, res_range_qrs, res_cur_qrs;
     TextView lbl_pFullName, lbl_pBirthPlace, lbl_pBirthDate, lbl_pIdNumb;
     Spinner lbl_pIdType, lbl_pTittleName, lbl_pBloodType, client_list;
@@ -169,6 +170,7 @@ public class Monitor extends AppCompatActivity {
         client_list = findViewById(R.id.client_list);
 
         lbl_device_info = findViewById(R.id.lbl_device_info);
+        lbl_diagnose = findViewById(R.id.lbl_diagnosa);
         resBpm = findViewById(R.id.res_bpm);
         res_cur_rr = findViewById(R.id.res_current_rr);
         res_range_rr = findViewById(R.id.res_range_rr);
@@ -270,7 +272,7 @@ public class Monitor extends AppCompatActivity {
 
                 dimension = new Vector2(width, height);
                 graph.SetRectDimension(width,height);
-                graph.SetCenterGraph(width - 20, height/2);
+                graph.SetCenterGraph(width - 150, height/2);
 
                 grid.SetRectDimension(width, height);
             }
@@ -317,9 +319,14 @@ public class Monitor extends AppCompatActivity {
                         startSerialConnection();
                     } else {
                         DetectDevice();
-                        usbConn = usbManager.openDevice(usbD);
-                        serial = UsbSerialDevice.createUsbSerialDevice(usbD, usbConn);
-                        startSerialConnection();
+                        if(usbD != null){
+                            usbConn = usbManager.openDevice(usbD);
+                            serial = UsbSerialDevice.createUsbSerialDevice(usbD, usbConn);
+                            startSerialConnection();
+                        } else {
+                            lbl_device_info.setText(R.string.info_noDevice);
+                            lbl_device_info.setTextColor(Color.RED);
+                        }
                     }
                 }
             }
@@ -428,6 +435,7 @@ public class Monitor extends AppCompatActivity {
         frame_menu.setVisibility(View.GONE);
         frame_menu_spacer.setVisibility(View.GONE);
         frame_ecg.setVisibility(View.VISIBLE);
+        lbl_diagnose.setText(R.string.lbl_diagnose);
         state.tab = 1;
     }
 
@@ -443,6 +451,7 @@ public class Monitor extends AppCompatActivity {
         frame_menu.setVisibility(View.GONE);
         frame_menu_spacer.setVisibility(View.GONE);
         frame_ecg.setVisibility(View.VISIBLE);
+        lbl_diagnose.setText(R.string.lbl_medresult);
     }
 
     void OnMedRec(){
@@ -541,7 +550,7 @@ public class Monitor extends AppCompatActivity {
                             resBtn.setPadding(2,2,2,2);
 
                             name.setText(item.getString("name"));
-                            date.setText(recDate.getDate() + "/" + recDate.getMonth() + "/" + recDate.getYear());
+                            date.setText(Date(item.getString("date")));
                             resBtn.setText(R.string.db_lbl_hasil);
 
                             name.setTextColor(getColor(R.color.color_dark_navy_blue));
@@ -588,6 +597,20 @@ public class Monitor extends AppCompatActivity {
         });
 
         state.tab = 2;
+    }
+
+    String Date(String s){
+        String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+        String[] sArr = s.split(" ");
+        int m = 0;
+        for(int i = 0; i < months.length; i++){
+            if(months[i].equals(sArr[1])){
+                m = i;
+                i = months.length;
+            }
+        }
+        String outRet = sArr[2] + "/" + m + "/" + sArr[5] ;
+        return outRet;
     }
 
     void ResetDiagVal(){

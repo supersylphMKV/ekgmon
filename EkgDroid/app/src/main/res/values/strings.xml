@@ -3,6 +3,7 @@
     <string name="btn_login">LOGIN</string>
 
     <string name="lbl_diagnose">DIAGNOSA</string>
+    <string name="lbl_medresult">HASIL REKAM MEDIS</string>
     <string name="lbl_username">username</string>
     <string name="lbl_password">password</string>
     <string name="lbl_daftar">Daftar</string>
@@ -53,6 +54,8 @@
     <string name="info_noConnection">Tidak ada koneksi !</string>
     <string name="info_dataNotFound">Data tidak ditemukan !</string>
     <string name="info_notMatch">Password Salah !</string>
+    <string name="info_noDevice">Alat belom terpasang !</string>
+
     <string name="lbl_diag_qt">QT</string>
     <string name="lbl_diag_pr">PR</string>
     <string name="test_range_ms">500 - 500 (ms)</string>

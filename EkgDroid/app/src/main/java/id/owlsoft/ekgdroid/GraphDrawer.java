@@ -257,7 +257,8 @@ public class GraphDrawer extends View{
         if(reservedVal.length > 0){
             rCounter++;
             recordedVal.add(reservedVal[0]);
-            float mappedVal = (-(float)reservedVal[0] + 255) * 2;
+            float mappedVal = (-((float)reservedVal[0]*2) + 300) * 2;
+            mappedVal = Math.max(0, Math.min(areaHeight-50, mappedVal));
             //Log.i("val", String.valueOf(dotPos._y));
             if(reservedVal.length > 1){
                 /*float nextVal = (-(float)reservedVal[1] + 255) * 2;
