@@ -69,4 +69,12 @@
     <string name="lbl_QRSInt">QRS Interval</string>
     <string name="lbl_RRInt">RR Interval/Heart Beat</string>
     <string name="btn_close">TUTUP</string>
+    <string name="info_pg_title">Cara Penggunaan Aplikasi</string>
+    <string name="info_pg_1">1. Hubungkan ECG sensor pada perangkat mobile anda.</string>
+    <string name="info_pg_2">2. Pilih menu ECG Tes untuk melakukan Tes.</string>
+    <string name="info_pg_3">3. Hubungkan module ECG dengan perangkat smartphone anda.</string>
+    <string name="info_pg_4">4. Pasang Electrode pad pada tubuh anda seperti gambar dibawah :</string>
+    <string name="info_pg_5">5. Tekan tombol "Mulai tes" untuk memulai tes.</string>
+    <string name="info_pg_6">6. Tekan stop untuk menghentikan tes.</string>
+    <string name="info_pg_7">7. Jika anda telah selesai melakukan tes anda bisa menyimpan hasil tes anda dengan menekan tombol "Simpan".</string>
 </resources>
