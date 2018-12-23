@@ -46,7 +46,7 @@ class SocketConn {
     public static Socket mSocket;
     {
         try {
-            mSocket = IO.socket("http://103.43.47.17:1116");
+            mSocket = IO.socket("http://117.53.45.22:1116");
         } catch (URISyntaxException e) {
             Log.e("error", e.toString());
         }
@@ -152,6 +152,32 @@ class SocketConn {
             cb.call(e);
         }
 
+    }
+
+    public static synchronized void GetData(String table, String id, int reqId, EventListener cb){
+        JSONObject query = new JSONObject();
+        try{
+            query.put("table", table);
+            query.put("id", id);
+            query.put("reqId",reqId);
+            mSocket.emit("data", query, new Ack() {
+                @Override
+                public void call(Object... args) {
+                    if(args[1] != null){
+                        JSONObject resObj = (JSONObject) args[1];
+                        if(resObj.length() > 0){
+                            cb.call(resObj);
+                        } else {
+                            cb.call(0);
+                        }
+                    } else {
+                        cb.call(0);
+                    }
+                }
+            });
+        } catch (JSONException e){
+            cb.call(-1);
+        }
     }
 
     public static synchronized void CheckData(String table, HashMap<String, Object> filter, EventListener cb){
