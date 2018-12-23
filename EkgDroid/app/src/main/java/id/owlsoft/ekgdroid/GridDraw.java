@@ -18,7 +18,7 @@ public class GridDraw extends View{
         line.setColor(Color.LTGRAY);
         line.setStrokeWidth(2);
         mark.setColor(Color.GRAY);
-        mark.setTextSize(32);
+        mark.setTextSize(24);
     }
 
     public void SetRectDimension(int width, int height){

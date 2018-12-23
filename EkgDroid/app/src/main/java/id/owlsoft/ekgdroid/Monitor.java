@@ -38,6 +38,7 @@ import org.json.JSONObject;
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -312,17 +313,20 @@ public class Monitor extends AppCompatActivity {
                 state.isReplay = false;
                 if(graph.isDrawing){
                     stopSerialConnection();
+                    btn_detect.setText("DETEKSI");
                 } else {
                     if(usbManager != null && usbD != null){
                         usbConn = usbManager.openDevice(usbD);
                         serial = UsbSerialDevice.createUsbSerialDevice(usbD, usbConn);
                         startSerialConnection();
+                        btn_detect.setText("STOP");
                     } else {
                         DetectDevice();
                         if(usbD != null){
                             usbConn = usbManager.openDevice(usbD);
                             serial = UsbSerialDevice.createUsbSerialDevice(usbD, usbConn);
                             startSerialConnection();
+                            btn_detect.setText("STOP");
                         } else {
                             lbl_device_info.setText(R.string.info_noDevice);
                             lbl_device_info.setTextColor(Color.RED);
@@ -515,88 +519,112 @@ public class Monitor extends AppCompatActivity {
             @Override
             public void call(Object result) {
                 JSONArray objRes = (JSONArray)result;
-                try {
-                    if(objRes != null && objRes.length() > 0){
-                        for(int i = 0; i < objRes.length(); i++){
-                            JSONObject item = objRes.getJSONObject(i);
-                            Date recDate = new Date();
-                            recDate.parse(item.getString("date"));
-
-                            TableRow container = new TableRow(getBaseContext());
-                            TextView name = new TextView(getBaseContext());
-                            TextView age = new TextView(getBaseContext());
-                            TextView date = new TextView(getBaseContext());
-                            TextView resBtn = new TextView(getBaseContext());
-
-                            TableRow.LayoutParams nameParam = new TableRow.LayoutParams(0,TableRow.LayoutParams.WRAP_CONTENT);
-                            TableRow.LayoutParams ageParam = new TableRow.LayoutParams(0,TableRow.LayoutParams.WRAP_CONTENT);
-                            TableRow.LayoutParams dateParam = new TableRow.LayoutParams(0,TableRow.LayoutParams.WRAP_CONTENT);
-                            TableRow.LayoutParams btnParam = new TableRow.LayoutParams(0,TableRow.LayoutParams.WRAP_CONTENT);
-
-                            nameParam.weight = 6;
-                            ageParam.weight = 2;
-                            dateParam.weight = 3;
-                            btnParam.weight = 2;
-
-                            container.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                            name.setLayoutParams(nameParam);
-                            date.setLayoutParams(dateParam);
-                            age.setLayoutParams(ageParam);
-                            resBtn.setLayoutParams(btnParam);
-
-                            name.setPadding(2,2,2,2);
-                            date.setPadding(2,2,2,2);
-                            age.setPadding(2,2,2,2);
-                            resBtn.setPadding(2,2,2,2);
-
-                            name.setText(item.getString("name"));
-                            date.setText(Date(item.getString("date")));
-                            resBtn.setText(R.string.db_lbl_hasil);
-
-                            name.setTextColor(getColor(R.color.color_dark_navy_blue));
-                            date.setTextColor(getColor(R.color.color_dark_navy_blue));
-                            age.setTextColor(getColor(R.color.color_dark_navy_blue));
-                            resBtn.setTextColor(getColor(R.color.color_dark_navy_blue));
-
-
-                            container.addView(name);
-                            container.addView(age);
-                            container.addView(date);
-                            container.addView(resBtn);
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    db_frame.addView(container);
-                                    resBtn.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            setTab(4);
-                                            JSONArray arrayObj;
-                                            try {
-                                                arrayObj = item.getJSONArray("data");
-                                                graph.InputData(arrayObj);
-                                                graph.StartDraw(true);
-                                                state.isReplay = true;
-                                            } catch (JSONException e){
-
-                                            }
-
-
-                                        }
-                                    });
-                                }
-                            });
+                if(objRes != null && objRes.length() > 0){
+                    for(int it = 0; it < objRes.length(); it++){
+                        try {
+                            JSONObject item = objRes.getJSONObject(it);
+                            DisplayDataList(it, item);
+                        } catch (JSONException e){
 
                         }
-                    }
-                } catch (JSONException e){
-
+                    };
                 }
             }
         });
 
         state.tab = 2;
+    }
+
+    void DisplayDataList(int i,JSONObject item){
+        try{
+            socket.GetData("d", item.getString("user"), ("age_" + i).hashCode(), new EventListener() {
+                @Override
+                public void call(Object retUser) {
+                    JSONObject usr = (JSONObject)retUser;
+                    try {
+                        String ds = item.getString("date");
+                        Date recDate = new Date(ds);
+                        Date dob = new Date(usr.getString("birthDate"));
+                        int ageId = usr.getInt("reqId");
+                        int yob = dob.getYear();
+                        int yon = new Date().getYear();
+                        int a = yon - yob;
+
+                        TableRow container = new TableRow(getBaseContext());
+                        TextView name = new TextView(getBaseContext());
+                        TextView age = new TextView(getBaseContext());
+                        TextView date = new TextView(getBaseContext());
+                        TextView resBtn = new TextView(getBaseContext());
+
+                        TableRow.LayoutParams nameParam = new TableRow.LayoutParams(0,TableRow.LayoutParams.WRAP_CONTENT);
+                        TableRow.LayoutParams ageParam = new TableRow.LayoutParams(0,TableRow.LayoutParams.WRAP_CONTENT);
+                        TableRow.LayoutParams dateParam = new TableRow.LayoutParams(0,TableRow.LayoutParams.WRAP_CONTENT);
+                        TableRow.LayoutParams btnParam = new TableRow.LayoutParams(0,TableRow.LayoutParams.WRAP_CONTENT);
+
+                        nameParam.weight = 6;
+                        ageParam.weight = 2;
+                        dateParam.weight = 3;
+                        btnParam.weight = 2;
+
+                        container.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                        name.setLayoutParams(nameParam);
+                        date.setLayoutParams(dateParam);
+                        age.setLayoutParams(ageParam);
+                        resBtn.setLayoutParams(btnParam);
+
+                        name.setPadding(2,2,2,2);
+                        date.setPadding(2,2,2,2);
+                        age.setPadding(2,2,2,2);
+                        resBtn.setPadding(2,2,2,2);
+
+                        name.setText(item.getString("name"));
+                        date.setText(Date(item.getString("date")));
+                        resBtn.setText(R.string.db_lbl_hasil);
+                        age.setText("" + a);
+
+                        name.setTextColor(getColor(R.color.color_dark_navy_blue));
+                        date.setTextColor(getColor(R.color.color_dark_navy_blue));
+                        age.setTextColor(getColor(R.color.color_dark_navy_blue));
+                        resBtn.setTextColor(getColor(R.color.color_dark_navy_blue));
+
+
+                        container.addView(name);
+                        container.addView(age);
+                        container.addView(date);
+                        container.addView(resBtn);
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                db_frame.addView(container);
+                                resBtn.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        setTab(4);
+                                        JSONArray arrayObj;
+                                        try {
+                                            arrayObj = item.getJSONArray("data");
+                                            graph.InputData(arrayObj);
+                                            graph.StartDraw(true);
+                                            state.isReplay = true;
+                                        } catch (JSONException e){
+
+                                        }
+                                    }
+                                });
+                            }
+                        });
+
+
+                    } catch (JSONException e){
+
+                    }
+
+                }
+            });
+        }catch(JSONException e){
+
+        }
     }
 
     String Date(String s){
