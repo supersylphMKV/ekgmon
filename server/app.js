@@ -194,6 +194,7 @@ function GetList(query,fn){
 function GetData(query,fn){
     var table = null;
     var id = null;
+    var req = null;
 
     if('table' in query){
         table = query.table;
@@ -203,8 +204,13 @@ function GetData(query,fn){
         id = query.id;
     }
 
+    if('reqId' in query){
+        req = query['reqId'];
+    }
+
     if(table != null && id != null){
         r.table(table).get(id).run(function(err,res){
+            res.reqId = req;
             fn(err,res);
         })
     } else {
