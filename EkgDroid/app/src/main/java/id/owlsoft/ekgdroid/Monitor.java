@@ -633,7 +633,7 @@ public class Monitor extends AppCompatActivity {
         int m = 0;
         for(int i = 0; i < months.length; i++){
             if(months[i].equals(sArr[1])){
-                m = i;
+                m = i+1;
                 i = months.length;
             }
         }
