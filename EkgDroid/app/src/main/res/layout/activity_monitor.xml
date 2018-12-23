@@ -48,7 +48,7 @@
             android:id="@+id/window_ekg"
             android:layout_width="match_parent"
             android:layout_height="0px"
-            android:layout_weight="4"
+            android:layout_weight="5"
             android:background="@color/color_dark_navy_blue">
 
             <FrameLayout
@@ -83,19 +83,18 @@
             android:padding="4dp"
             android:text="@string/lbl_diagnose"
             android:textAlignment="viewStart"
-            android:textSize="18sp" />
+            android:textSize="14sp" />
 
         <LinearLayout
             android:id="@+id/window_card"
             android:layout_width="match_parent"
-            android:layout_height="0px"
-            android:layout_weight="2"
+            android:layout_height="wrap_content"
             android:background="@color/color_dark_navy_blue"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -108,7 +107,7 @@
                     android:padding="2dp"
                     android:text="@string/lbl_diag_qrs"
                     android:textColor="@color/color_pithcBlack"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/res_range_qrs"
@@ -118,12 +117,12 @@
                     android:background="@color/color_clearWhite"
                     android:padding="2dp"
                     android:textColor="@color/color_pithcBlack"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/res_current_qrs"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_margin="2dp"
                     android:autoSizeTextType="uniform"
                     android:background="@color/color_clearWhite"
@@ -131,7 +130,7 @@
                     android:padding="4dp"
                     android:textAlignment="center"
                     android:textColor="@color/color_sky_blue"
-                    android:textSize="24sp">
+                    android:textSize="20sp">
 
                 </TextView>
 
@@ -139,7 +138,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -152,7 +151,7 @@
                     android:padding="2dp"
                     android:text="@string/lbl_diag_pr"
                     android:textColor="@color/color_pithcBlack"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/res_range_pr"
@@ -162,12 +161,12 @@
                     android:background="@color/color_clearWhite"
                     android:padding="2dp"
                     android:textColor="@color/color_pithcBlack"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/res_current_pr"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_margin="2dp"
                     android:autoSizeTextType="uniform"
                     android:background="@color/color_clearWhite"
@@ -175,7 +174,7 @@
                     android:padding="4dp"
                     android:textAlignment="center"
                     android:textColor="@color/color_sky_blue"
-                    android:textSize="24sp">
+                    android:textSize="20sp">
 
                 </TextView>
 
@@ -183,7 +182,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -196,7 +195,7 @@
                     android:padding="2dp"
                     android:text="@string/lbl_diag_qt"
                     android:textColor="@color/color_pithcBlack"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/res_range_qt"
@@ -206,12 +205,12 @@
                     android:background="@color/color_clearWhite"
                     android:padding="2dp"
                     android:textColor="@color/color_pithcBlack"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/res_current_qt"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_margin="2dp"
                     android:autoSizeTextType="uniform"
                     android:background="@color/color_clearWhite"
@@ -220,7 +219,7 @@
                     android:padding="4dp"
                     android:textAlignment="center"
                     android:textColor="@color/color_sky_blue"
-                    android:textSize="24sp">
+                    android:textSize="20sp">
 
                 </TextView>
 
@@ -228,7 +227,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -241,7 +240,7 @@
                     android:padding="2dp"
                     android:text="@string/lbl_diag_rr"
                     android:textColor="@color/color_pithcBlack"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/res_range_rr"
@@ -251,12 +250,12 @@
                     android:background="@color/color_clearWhite"
                     android:padding="2dp"
                     android:textColor="@color/color_pithcBlack"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/res_current_rr"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_margin="2dp"
                     android:autoSizeTextType="uniform"
                     android:background="@color/color_clearWhite"
@@ -264,7 +263,7 @@
                     android:padding="4dp"
                     android:textAlignment="center"
                     android:textColor="@color/color_sky_blue"
-                    android:textSize="24sp">
+                    android:textSize="20sp">
 
                 </TextView>
 
@@ -401,7 +400,141 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="8dp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/info_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textMultiLine"
+                    android:padding="8dp"
+                    android:text="@string/info_pg_title"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/color_pithcBlack"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/info_pg1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:ems="10"
+                    android:inputType="textMultiLine"
+                    android:text="@string/info_pg_1"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/color_pithcBlack"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/info_pg2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:ems="10"
+                    android:inputType="textMultiLine"
+                    android:text="@string/info_pg_2"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/color_pithcBlack"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/info_pg3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:ems="10"
+                    android:inputType="textMultiLine"
+                    android:text="@string/info_pg_3"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/color_pithcBlack"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/info_pg4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:ems="10"
+                    android:inputType="textMultiLine"
+                    android:text="@string/info_pg_4"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/color_pithcBlack"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/info_dg" />
+
+                <TextView
+                    android:id="@+id/info_pg5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:ems="10"
+                    android:inputType="textMultiLine"
+                    android:text="@string/info_pg_5"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/color_pithcBlack"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/info_pg6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:ems="10"
+                    android:inputType="textMultiLine"
+                    android:text="@string/info_pg_6"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/color_pithcBlack"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/info_pg7"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:ems="10"
+                    android:inputType="textMultiLine"
+                    android:text="@string/info_pg_7"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/color_pithcBlack"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/menu_frame"
