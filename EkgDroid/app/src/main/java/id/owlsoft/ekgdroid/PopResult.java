@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -49,7 +50,7 @@ public class PopResult extends Activity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int)(width * .8), (int)(height * .95));
+        getWindow().setLayout((int)(width * .7), ViewGroup.LayoutParams.WRAP_CONTENT);
 
         pr_res.setText(String.valueOf(testResult.prRate));
         pr_range.setText(testResult.prMin + " ms - " + testResult.prMax + " ms");
